@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="{{ Auth::user()->role == 'staff' || Auth::user()->role == 'teknisi' ? 'col-6' : 'col-12' }}">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-3">{{ $title }}</h4>
@@ -117,65 +117,69 @@
                         </div> <!-- end card body-->
                     </div> <!-- end card -->
                 </div>
-                <div class="col-6">
-                    <div class="d-lg-flex mb-4">
+                @if (Auth::user()->role == 'staff' || Auth::user()->role == 'teknisi')
+                    <div class="col-6">
+                        <div class="d-lg-flex mb-4">
 
 
-                        <div class="w-100 user-chat mt-4 mt-sm-0 card mb-0">
+                            <div class="w-100 user-chat mt-4 mt-sm-0 card mb-0">
 
-                            <div class="card-body">
-                                <div id="ticket-id" data-ticket-id="{{ $ticket->id }}"></div>
-                                <div class="pb-3 ">
-                                    <div class="row">
-                                        <div class="col-md-11 col-10">
-                                            <h5 class="font-size-15 mb-1 text-truncate">{{ __('Comment') }}</h5>
+                                <div class="card-body">
+                                    <div id="ticket-id" data-ticket-id="{{ $ticket->id }}"></div>
+                                    <div class="pb-3 ">
+                                        <div class="row">
+                                            <div class="col-md-11 col-10">
+                                                <h5 class="font-size-15 mb-1 text-truncate">{{ __('Comment') }}</h5>
+                                            </div>
+
+
                                         </div>
-
 
                                     </div>
 
-                                </div>
-
-                                <div class="chat-conversation py-3">
-                                    <ul id="replies" class="list-unstyled mb-0 pe-3" data-simplebar
-                                        style="max-height: 43vh; overflow-y: auto;">
-                                        <div id="replies"></div>
-                                    </ul>
-                                    @if ($ticket->status != 'closed')
-                                        <form action="" method="post" id="form-reply">
-                                            @csrf
-                                            <div class="px-lg-3">
-                                                <div class="pt-3">
-                                                    <div class="row">
-                                                        <div class="col">
-                                                            <div class="position-relative">
-                                                                <input type="hidden" class="form-control" value="{{ $ticket->id }}" name="ticket_id">
-                                                                <input type="text" class="form-control chat-input"
-                                                                    id="input-message" name="comment"
-                                                                    placeholder="{{ __('Enter Message') }}" autocomplete="off">
+                                    <div class="chat-conversation py-3">
+                                        <ul id="replies" class="list-unstyled mb-0 pe-3" data-simplebar
+                                            style="max-height: 43vh; overflow-y: auto;">
+                                            <div id="replies"></div>
+                                        </ul>
+                                        @if ($ticket->status != 'closed')
+                                            <form action="" method="post" id="form-reply">
+                                                @csrf
+                                                <div class="px-lg-3">
+                                                    <div class="pt-3">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="position-relative">
+                                                                    <input type="hidden" class="form-control"
+                                                                        value="{{ $ticket->id }}" name="ticket_id">
+                                                                    <input type="text" class="form-control chat-input"
+                                                                        id="input-message" name="comment"
+                                                                        placeholder="{{ __('Enter Message') }}"
+                                                                        autocomplete="off">
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-auto">
-                                                            <button type="submit"
-                                                                class="btn btn-danger chat-send w-md waves-effect waves-light"
-                                                                id="btn-submit" disabled><span
-                                                                    class="d-none d-sm-inline-block me-2 ">
-                                                                    <span class="send-text">Send</span>
-                                                                    <span class="spinner-border text-white "
-                                                                        style="width: 15px; height: 15px; display: none"></span>
-                                                                </span>
-                                                                <i class="mdi mdi-send"></i></button>
+                                                            <div class="col-auto">
+                                                                <button type="submit"
+                                                                    class="btn btn-danger chat-send w-md waves-effect waves-light"
+                                                                    id="btn-submit" disabled><span
+                                                                        class="d-none d-sm-inline-block me-2 ">
+                                                                        <span class="send-text">Send</span>
+                                                                        <span class="spinner-border text-white "
+                                                                            style="width: 15px; height: 15px; display: none"></span>
+                                                                    </span>
+                                                                    <i class="mdi mdi-send"></i></button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </form>
-                                    @endif
+                                            </form>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endif
             </div>
         </div><!-- end col-->
     </div>
