@@ -35,7 +35,11 @@ class CDashboard extends Controller
                 $notification->markAsRead();
             }
         }
-        return redirect()->route('ticket.index');
+        if ($notification->data['type']== 'comment') {
+            return redirect($notification->data['url']);
+        }else {
+            return redirect()->route('ticket.index');
+        }
     }   
     public function read(Request $request)
     {
