@@ -25,21 +25,23 @@
                 <i class="ri-menu-2-line align-middle"></i>
             </button>
             <!-- start page title -->
-            <div class="page-title-box align-self-center d-none d-md-block">
-               <span class="btn btn-rounded btn-success btn-sm" data-bs-toggle="button" style="margin-left: 20px">
-                    {{  Session::get('shift')}}</span>
-            </div>
+            @if (Session::get('shift') != null)
+                <div class="page-title-box align-self-center d-none d-md-block">
+                    <span class="btn btn-rounded btn-success btn-sm" data-bs-toggle="button" style="margin-left: 20px">
+                        {{ Session::get('shift') }}</span>
+                </div>
+            @endif
             <!-- end page title -->
         </div>
         <div class="d-flex">
             <div class="dropdown d-none d-lg-inline-block ms-1">
-               
+
                 <span id="clock" class="btn btn-rounded btn-danger btn-sm d-none"></span>
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
                     <i class="ri-fullscreen-line"></i>
                 </button>
             </div>
-            
+
             @cannot('admin')
                 <div class="dropdown d-inline-block">
                     <button type="button" class="btn header-item noti-icon waves-effect"
