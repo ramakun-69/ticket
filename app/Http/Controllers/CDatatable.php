@@ -10,6 +10,8 @@ use App\Models\MLocation;
 use App\Models\MDepartment;
 use Illuminate\Http\Request;
 use App\Models\MProductionAsset;
+use App\Models\MShift;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -25,6 +27,26 @@ class CDatatable extends Controller
                     <a href="' . route('master-data.location.edit', $row) . '" class="btn btn-sm btn-warning edit me-2"><i class="mdi mdi-pencil"></i></a>
                     <a href="' . route('master-data.location.destroy', $row) . '" class="btn btn-sm btn-danger delete"><i class="mdi mdi-delete"></i></a>
                 </div>';
+            })
+            ->rawColumns(['action'])
+            ->addIndexColumn()
+            ->toJson();
+    }
+    public function mShift()
+    {
+        $data = MShift::all();
+        return DataTables::of($data)
+            ->addColumn('action', function ($row) {
+                return '    
+                <div class="btn-group" role="group">
+                    <a href="' . route('master-data.shift.edit', $row) . '" class="btn btn-sm btn-warning edit me-2"><i class="mdi mdi-pencil"></i></a>
+                    <a href="' . route('master-data.shift.destroy', $row) . '" class="btn btn-sm btn-danger delete"><i class="mdi mdi-delete"></i></a>
+                </div>';
+            })
+            ->addColumn('time', function($row){
+                $startTime = Carbon::parse($row->start_time)->format('H:i');
+                $endTime = Carbon::parse($row->end_time)->format('H:i');
+                return $startTime . ' - ' . $endTime;
             })
             ->rawColumns(['action'])
             ->addIndexColumn()
@@ -85,6 +107,9 @@ class CDatatable extends Controller
         return DataTables::of($data)
             ->addColumn('foto', function ($row) {
                 return $row->user?->getPhoto();
+            })
+            ->addColumn('shift', function($row){
+                return $row?->shift?->name;
             })
             ->addColumn('action', function ($row) {
                 return '

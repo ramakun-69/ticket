@@ -16,6 +16,7 @@ class PegawaiRequest extends FormRequest
         "phone" => 1,
         "department_id" => 1,
         "user_id" => 0,
+        "shift_id" => 1,
         "email" => 1,
         "username"=> 1,
         "position"=> 1,

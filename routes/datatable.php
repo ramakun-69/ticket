@@ -9,6 +9,7 @@ Route::middleware(['auth'])->group(function () {
     ->controller(CDatatable::class)
     ->group(function () {
         Route::get('mLocation', 'mLocation')->name('mLocation');
+        Route::get('mShift', 'mShift')->name('mShift');
         Route::get('mDepartment', 'mDepartment')->name('mDepartment');
         Route::get('mPegawai', 'mPegawai')->name('mPegawai');
         Route::get('mProduction-asset', 'mProductionAsset')->name('mProduction-asset');

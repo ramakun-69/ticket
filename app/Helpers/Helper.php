@@ -1,22 +1,24 @@
 <?php
 
-
+use Carbon\Carbon;
+use App\Models\MShift;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 
 function generateTicketNumber($type)
 {
     // Tentukan kode berdasarkan tipe tiket
     $code = ($type == 'machine') ? "TM" : (($type == 'utilities') ? "TU" : (($type == 'sipil') ? "TS" : "IT"));
-    
+
     $currentMonth = date('m');
     $currentYear = date('Y');
     $lastTicketNumber = DB::table('tickets')
         ->whereMonth('created_at', '=', $currentMonth)
         ->whereYear('created_at', '=', $currentYear)
         ->max('ticket_number');
-    
+
     if (!$lastTicketNumber) {
         $ticketNumber = 'WO-' . $code . '-001';
     } else {
@@ -30,6 +32,20 @@ function generateTicketNumber($type)
     return $ticketNumber;
 }
 
+function setShift()
+{
+    $currentTime = Carbon::now();
+    $shifts = MShift::all();
+    foreach ($shifts as $shift) {
+        $startTime = Carbon::parse($shift->start_time);
+        $endTime = Carbon::parse($shift->end_time);
+        if ($currentTime->between($startTime, $endTime)) {
+            Session::put('shift', $shift->name);
+            return;
+        }
+    }
+    Session::put('shift', null);
+}
 
 function buildBadgeStatus($text)
 {

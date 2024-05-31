@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Master\PegawaiRequest;
 use App\Models\MDepartment;
 use App\Models\MPegawai;
+use App\Models\MShift;
 use App\Repositories\App\AppRepository;
 use App\Repositories\Pegawai\PegawaiRepository;
 
@@ -24,7 +25,8 @@ class CPegawai extends Controller
     {
         $title = __('Employee');
         $department = MDepartment::all();
-        return view('pages.master-data.employee.index', compact('title','department'));
+        $shifts = MShift::all();
+        return view('pages.master-data.employee.index', compact('title','department', 'shifts'));
     }
 
     public function store(PegawaiRequest $request) {

@@ -9,7 +9,7 @@ class MPegawai extends Model
 {
     use HasFactory;
     protected $guarded = ["id"];
-    protected $with =["department"];
+    protected $with =["department", "shift"];
     
     public function department()
     {
@@ -18,5 +18,9 @@ class MPegawai extends Model
     public function user()
     {
         return $this->belongsTo(User::class,"user_id");
+    }
+    public function shift()
+    {
+        return $this->belongsTo(MShift::class,"shift_id") ?? null;
     }
 }

@@ -12,14 +12,14 @@
 
                 </div>
                 <div class="table-responsive">
-                    <table  class="table table-responsive table-striped" id="datatable">
+                    <table  class="table table-striped" id="datatable">
                     </table>
                 </div>
             </div> <!-- end card body-->
         </div> <!-- end card -->
     </div><!-- end col-->
 </div>
-@widget('modal',["title"=>__('employee'),"form"=>"pages.master-data.employee.form", 'data' =>['department'=> $department], "type" => "modal-lg" ])
+@widget('modal',["title"=>__('employee'),"form"=>"pages.master-data.employee.form", 'data' =>['department'=> $department, 'shifts' => $shifts], "type" => "modal-lg" ])
 @widget('delete', ["dt" =>true])
 @endsection
 @push('datatable')
@@ -45,6 +45,7 @@
       },
       {'title' : '{{ __("Position") }}','data' : 'position', 'name' : 'position'},
       {'title' : '{{ __("Department") }}','data' : 'department.name'},
+      {'title' : '{{ __("Shift") }}','data' : 'shift'},
       {
           'title' : '{{ __("Action") }}',
           'data' : 'action',
@@ -65,6 +66,7 @@
       modal.find("input[name=phone]").val(response.data.phone);
       modal.find("input[name=position]").val(response.data.position);
       modal.find("select[name=department_id]").val(response.data.department.id);
+      modal.find("select[name=shift_id]").val(response.data.shift_id);
       modal.find("input[name=email]").val(response.data.user.email);
       modal.find("input[name=username]").val(response.data.user.username);
       modal.find("select[name=role]").val(response.data.user.role);

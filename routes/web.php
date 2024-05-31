@@ -11,6 +11,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\CItAsset;
 use App\Http\Controllers\Master\CPegawai;
 use App\Http\Controllers\Master\CProductionAsset;
+use App\Http\Controllers\Master\CShift;
 use App\Http\Controllers\Ticket\CComment;
 use App\Http\Controllers\Ticket\CReport;
 use App\Http\Controllers\Ticket\CTicket;
@@ -39,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('location', CLocation::class);
             Route::resource('department', CDepartment::class);
             Route::resource('employee', CPegawai::class);
+            Route::resource('shift', CShift::class);
         });
     Route::middleware("checkRole:admin,staff,atasan,teknisi,atasan teknisi")
         ->controller(CTicket::class)

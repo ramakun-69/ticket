@@ -50,6 +50,7 @@
                         <li><a href="{{ route('master-data.location.index') }}">{{ __('Location') }}</a></li>
                         <li><a href="{{ route('master-data.department.index') }}">{{ __('Department') }}</a></li>
                         <li><a href="{{ route('master-data.employee.index') }}">{{ __('Employee') }}</a></li>
+                        <li><a href="{{ route('master-data.shift.index') }}">{{ __('Shift') }}</a></li>
                     </ul>
                 </li>
                 <li>

@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_pegawais', function (Blueprint $table) {
+        Schema::create('m_shifts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('department_id');
-            $table->foreignId('user_id');
-            $table->foreignId('shift_id');
             $table->string('name');
-            $table->enum('gender', ['laki-laki','perempuan']);
-            $table->string('address');
-            $table->string('position');
-            $table->string('phone')->unique();
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
         });
     }
@@ -30,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_pegawais');
+        Schema::dropIfExists('m_shifts');
     }
 };

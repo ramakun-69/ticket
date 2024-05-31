@@ -43,7 +43,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $title = __('login');
-        return view('auth.login',compact('title'));
+        return view('auth.login', compact('title'));
     }
     public function login(Request $request)
     {
@@ -52,7 +52,8 @@ class LoginController extends Controller
                 [
                     $this->username() => 'required|string',
                     'password' => 'required|string',
-                ]);
+                ]
+            );
             if (
                 method_exists($this, 'hasTooManyLoginAttempts') &&
                 $this->hasTooManyLoginAttempts($request)
@@ -64,6 +65,7 @@ class LoginController extends Controller
                 if ($request->hasSession()) {
                     $request->session()->put('auth.password_confirmed_at', time());
                 }
+                setShift();
                 return $this->sendLoginResponse($request);
             }
             $this->incrementLoginAttempts($request);
@@ -93,5 +95,4 @@ class LoginController extends Controller
             ? new JsonResponse(["message" => "Berhasil Masuk, mohon tunggu sebentar ...", "redirect" => $this->redirectPath()], 200)
             : redirect()->intended($this->redirectPath());
     }
-
 }

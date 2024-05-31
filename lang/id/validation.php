@@ -245,6 +245,8 @@ return [
         'problem_analysis'         => 'Analisis Masalah',
         'action'                   => 'Tindakan',
         'start_date'               => 'Tanggal Awal',
-        'end_date'                  => 'Tanggal Akhir'
+        'end_date'                  => 'Tanggal Akhir',
+        'start_time'                  => 'Waktu Mulai',
+        'end_time'                  => 'Waktu Berakhir',
     ],
 ];
