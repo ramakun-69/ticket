@@ -105,8 +105,8 @@
                                     <p class="mb-0">©
                                         <script>
                                             document.write(new Date().getFullYear())
-                                        </script> PT.Samco Farma. Developer by <a
-                                            href="www.erasites.com">Erasites Citra Digital Indonesia</a>
+                                        </script> PT.Samco Farma. Developer by 
+                                        {{-- <a href="www.erasites.com">Erasites Citra Digital Indonesia</a> --}}
                                     </p>
                                 </div>
                             </div>
