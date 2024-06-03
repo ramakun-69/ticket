@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Master\CLocation;
 use App\Http\Controllers\Master\CDepartment;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CHistory;
 use App\Http\Controllers\CProfile;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Master\CItAsset;
@@ -48,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         ->controller(CTicket::class)
         ->group(function () {
             Route::resource('ticket', CTicket::class);
+
             Route::get('change-shift/{ticket}', [CTicket::class, 'changeShift'])->name('ticket.change-shift');
             Route::post('rolling-shift', [CTicket::class, 'rollingShift'])->name('ticket.rolling-shift');
             Route::get('ticket-asset', 'ticketAssets')->name('ticket-asset');
@@ -55,9 +57,10 @@ Route::middleware(['auth'])->group(function () {
             Route::put('confirm-ticket/{ticket}', [CTicket::class, 'confirm'])->name('ticket.confirm');
             Route::put('close-ticket/{ticket}', [CTicket::class, 'close'])->name('ticket.close');
         });
-    Route::get('my-ticket',  [CTicket::class, 'myTicket'])->middleware("checkRole:staff,atasan,teknisi,atasan teknisi")->name('ticket.myTicket'); 
-    Route::middleware("checkRole:admin,staff,atasan,teknisi,atasan teknisi")
+        Route::get('my-ticket',  [CTicket::class, 'myTicket'])->middleware("checkRole:staff,atasan,teknisi,atasan teknisi")->name('ticket.myTicket');
+        Route::middleware("checkRole:admin,staff,atasan,teknisi,atasan teknisi")
         ->group(function () {
+            Route::resource('history', CHistory::class);
             Route::resource('report', CReport::class);
             Route::get('export-report', [CReport::class, 'export'])->name('report.export');
             Route::resource('profile', CProfile::class);

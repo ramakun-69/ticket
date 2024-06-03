@@ -16,5 +16,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('mIt-asset', 'mItAsset')->name('mIt-asset');
         Route::get('tickets','ticket')->name('tickets');
         Route::get('my-ticket','myTicket')->name('myTicket');
+        Route::get('history','history')->name('history');
     });
 });

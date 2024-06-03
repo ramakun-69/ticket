@@ -43,7 +43,7 @@ class CDatatable extends Controller
                     <a href="' . route('master-data.shift.destroy', $row) . '" class="btn btn-sm btn-danger delete"><i class="mdi mdi-delete"></i></a>
                 </div>';
             })
-            ->addColumn('time', function($row){
+            ->addColumn('time', function ($row) {
                 $startTime = Carbon::parse($row->start_time)->format('H:i');
                 $endTime = Carbon::parse($row->end_time)->format('H:i');
                 return $startTime . ' - ' . $endTime;
@@ -108,7 +108,7 @@ class CDatatable extends Controller
             ->addColumn('foto', function ($row) {
                 return $row->user?->getPhoto();
             })
-            ->addColumn('shift', function($row){
+            ->addColumn('shift', function ($row) {
                 return $row?->shift?->name;
             })
             ->addColumn('action', function ($row) {
@@ -193,6 +193,52 @@ class CDatatable extends Controller
     {
         $user = Auth::user()->pegawai;
         $data = Ticket::where("created_by", $user->id)->get();
+        return DataTables::of($data)
+            ->addColumn('status', function ($row) {
+                return buildBadgeStatus($row->status);
+            })
+            ->addColumn('action', function ($row) {
+                return buildTicketActionHtml($row);
+            })
+            ->addColumn('type', function ($row) {
+                return __($row->type);
+            })
+            ->rawColumns(['action', 'status'])
+            ->addIndexColumn()
+            ->toJson();
+    }
+    public function history()
+    {
+        $user = Auth::user()->pegawai;
+    switch (Auth::user()->role) {
+            case 'staff':
+                $data = Ticket::where('staff_id', $user->id)->where('status', 'closed')->get();
+                break;
+            case 'atasan':
+                $data = Ticket::where('boss_id', $user->id)
+                    ->where('status', 'closed')
+                    ->get();
+                break;
+            case 'teknisi':
+                $data = Ticket::whereHas('technician', function ($query) use ($user) {
+                    $query->where('technician_id', $user->id);
+                })
+                    ->where(function ($query) {
+                        $query->where('status', 'closed');
+                    })->get();
+                break;
+            case 'atasan teknisi':
+                $data = Ticket::where('technician_boss_id', $user->id)->where('status', 'closed')
+                    ->get();
+                break;
+            case 'admin':
+                $data = Ticket::where('status','closed')->get();
+                break;
+            default:
+                $data = [];
+                break;
+        }
+
         return DataTables::of($data)
             ->addColumn('status', function ($row) {
                 return buildBadgeStatus($row->status);

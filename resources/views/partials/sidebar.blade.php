@@ -92,6 +92,13 @@
                         <span>{{ __('Report') }}</span>
                     </a>
                 </li>
+                 <li>
+                    <a href="{{ route("history.index") }}"
+                        class="waves-effect {{ Route::is('history') ? 'active' : '' }}">
+                        <i class="mdi mdi-history"></i><span class="badge rounded-pill bg-success float-end"></span>
+                        <span>{{ __('History') }}</span>
+                    </a>
+                </li>
                 {{-- @endcannot --}}
             </ul>
         </div>
