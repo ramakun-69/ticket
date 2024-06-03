@@ -127,7 +127,7 @@ class CDatatable extends Controller
         $user = Auth::user()->pegawai;
         switch (Auth::user()->role) {
             case 'staff':
-                $data = Ticket::where('staff_id', $user->id)->get();
+                $data = Ticket::where('staff_id', $user->id)->where('status', '!=', 'closed')->latest()->get();
                 break;
             case 'atasan':
                 $data = Ticket::where('boss_id', $user->id)
@@ -135,14 +135,10 @@ class CDatatable extends Controller
                         $query->where(function ($query) {
                             $query->when($query->whereNull('technician_boss_id'), function ($query) {
                                 $query->where(function ($query) {
-                                    $query->where('status', 'waiting approval')
-                                        ->orWhere('status', 'closed');
+                                    $query->where('status', 'waiting approval');
                                 });
                             });
-                        })
-                            ->orWhere(function ($query) {
-                                $query->where('status', 'waiting closed');
-                            });
+                        });
                     })->get();
                 break;
             case 'teknisi':
@@ -151,24 +147,20 @@ class CDatatable extends Controller
                 })
                     ->where(function ($query) {
                         $query->where('status', 'waiting process')
-                            ->orWhere('status', 'process')
-                            ->orWhere('status', 'waiting closed')
-                            ->orWhere('status', 'closed');
+                            ->orWhere('status', 'process');
                     })
                     ->get();
                 break;
             case 'atasan teknisi':
                 $data = Ticket::where('technician_boss_id', $user->id)
                     ->where(function ($query) {
-                        $query->where('status', 'waiting approval')
-                            ->orWhere('status', 'waiting closed')
-                            ->orWhere('status', 'closed');
+                        $query->where('status', 'waiting approval');
                     })
                     ->orWhere('status', 'closed')
                     ->get();
                 break;
             case 'admin':
-                $data = Ticket::latest()->get();
+                $data = Ticket::where('status', '!=','closed')->latest();
                 break;
             default:
                 $data = [];
@@ -210,7 +202,7 @@ class CDatatable extends Controller
     public function history()
     {
         $user = Auth::user()->pegawai;
-    switch (Auth::user()->role) {
+        switch (Auth::user()->role) {
             case 'staff':
                 $data = Ticket::where('staff_id', $user->id)->where('status', 'closed')->get();
                 break;
@@ -232,7 +224,7 @@ class CDatatable extends Controller
                     ->get();
                 break;
             case 'admin':
-                $data = Ticket::where('status','closed')->get();
+                $data = Ticket::where('status', 'closed')->get();
                 break;
             default:
                 $data = [];
