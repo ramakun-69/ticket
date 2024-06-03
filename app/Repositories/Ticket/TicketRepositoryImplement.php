@@ -34,67 +34,67 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
     }
 
     public function storeStaff($data)
-{
-    return DB::transaction(function () use ($data) {
-        $boss = MPegawai::whereHas('user', function ($query) {
-            $query->where('role', 'atasan');
-        })->where('department_id', Auth::user()->pegawai->department_id)->first();
+    {
+        return DB::transaction(function () use ($data) {
+            $boss = MPegawai::whereHas('user', function ($query) {
+                $query->where('role', 'atasan');
+            })->where('department_id', Auth::user()->pegawai->department_id)->first();
 
-        $type = $data["type"] == 'it' ? "it" : "produksi";
-        $ticketNumber = generateTicketNumber($data["type"]);
-        $status = "waiting approval";
+            $type = $data["type"] == 'it' ? "it" : "produksi";
+            $ticketNumber = generateTicketNumber($data["type"]);
+            $status = "waiting approval";
 
-        $ticketData = array_merge($data, [
-            'staff_id' => Auth::user()->pegawai->id,
-            'boss_id' => $boss->id,
-            'department_id' => Auth::user()->pegawai->department_id,
-            'ticket_number' => $ticketNumber,
-            'type' => $type,
-            'status' => $status,
-        ]);
+            $ticketData = array_merge($data, [
+                'staff_id' => Auth::user()->pegawai->id,
+                'boss_id' => $boss->id,
+                'department_id' => Auth::user()->pegawai->department_id,
+                'ticket_number' => $ticketNumber,
+                'type' => $type,
+                'status' => $status,
+            ]);
 
-        $ticket = $this->model->create($ticketData);
-        Notification::send($boss->user, new CreateTicketNotification($ticket));
+            $ticket = $this->model->create($ticketData);
+            Notification::send($boss->user, new CreateTicketNotification($ticket));
 
-        return $ticket;
-    });
-}
+            return $ticket;
+        });
+    }
 
-public function storeNonStaff($data)
-{
-    return DB::transaction(function () use ($data) {
-        $department = MDepartment::where('name', ($data['type'] == "it" ? "IT" : "Engineering"))
-            ->firstOrFail();
-        
-        $technicianBoss = MPegawai::whereHas('user', function ($query) {
-            $query->where('role', 'atasan teknisi');
-        })->where('department_id', $department->id)->first();
-        
-        // Tentukan kode berdasarkan tipe tiket
-        $code = ($data["type"] == 'machine') ? "TM" : (($data["type"] == 'utilities') ? "TU" : "IT");
-        $type = $data["type"] == 'it' ? "it" : "produksi";
-        
-        // Generate nomor tiket
-        $ticketNumber = generateTicketNumber($code);
+    public function storeNonStaff($data)
+    {
+        return DB::transaction(function () use ($data) {
+            $department = MDepartment::where('name', ($data['type'] == "it" ? "IT" : "Engineering"))
+                ->firstOrFail();
 
-        $status = "waiting approval";
-        
-        // Data tiket
-        $ticketData = array_merge($data, [
-            'technician_boss_id' => $technicianBoss->id,
-            'department_id' => $department->id, // Menggunakan department dari data yang ditemukan
-            'ticket_number' => $ticketNumber,
-            'type' => $type,
-            'status' => $status,
-        ]);
+            $technicianBoss = MPegawai::whereHas('user', function ($query) {
+                $query->where('role', 'atasan teknisi');
+            })->where('department_id', $department->id)->first();
 
-        // Buat tiket dan simpan ke database
-        $ticket = $this->model->create($ticketData);
-        
-        // Kirim notifikasi ke atasan teknisi
-        Notification::send($technicianBoss->user, new CreateTicketNotification($ticket));
-    });
-}
+            // Tentukan kode berdasarkan tipe tiket
+            $code = ($data["type"] == 'machine') ? "TM" : (($data["type"] == 'utilities') ? "TU" : "IT");
+            $type = $data["type"] == 'it' ? "it" : "produksi";
+
+            // Generate nomor tiket
+            $ticketNumber = generateTicketNumber($code);
+
+            $status = "waiting approval";
+
+            // Data tiket
+            $ticketData = array_merge($data, [
+                'technician_boss_id' => $technicianBoss->id,
+                'department_id' => $department->id, // Menggunakan department dari data yang ditemukan
+                'ticket_number' => $ticketNumber,
+                'type' => $type,
+                'status' => $status,
+            ]);
+
+            // Buat tiket dan simpan ke database
+            $ticket = $this->model->create($ticketData);
+
+            // Kirim notifikasi ke atasan teknisi
+            Notification::send($technicianBoss->user, new CreateTicketNotification($ticket));
+        });
+    }
 
 
     public function confirmByBoss($data)
@@ -137,14 +137,16 @@ public function storeNonStaff($data)
     {
         $ticket = Ticket::findOrFail($data['id']);
         $ticket->update([
-            'status' => "waiting closed",
-            'action' => $data["action"]
+            'status' => "closed",
+            'action' => $data["action"],
+            'finish_time' => now(),
         ]);
+        
         if ($ticket->type == 'produksi') {
             $dataSparePart = [];
             foreach ($data['part_name'] as $index => $partName) {
                 $dataSparePart[] = [
-                    'ticket_id' => $ticket->id,
+                    // 'ticket_id' => $ticket->id,
                     'name' => $partName,
                     'unit' => $data['unit'][$index],
                     'total' => $data['total'][$index],
@@ -152,12 +154,18 @@ public function storeNonStaff($data)
                     'created_at' => now(),
                 ];
             }
+           
             if (!empty($dataSparePart)) {
+                foreach ($dataSparePart as &$sparePart) {
+                    $sparePart['ticket_id'] = $ticket->id;
+                }
                 Sparepart::insert($dataSparePart);
             }
         }
         $boss = MPegawai::findOrFail($ticket->boss_id);
+        $staff = MPegawai::findOrFail($ticket->staff_id);
         Notification::send($boss->user, new FinishTicketNotification($ticket));
+        Notification::send($staff->user, new ClosedTicketNotification($ticket));
     }
 
     // Private Method
@@ -215,7 +223,10 @@ public function storeNonStaff($data)
         TechnicianTicket::where('ticket_id', $ticket->id)
             ->where('technician_id', $technicianId)
             ->update(['status' => 1]);
-        if (!TechnicianTicket::where('ticket_id', $ticket->id)->where('status', 0)->exists()) {
+
+        // Check if all technicians have approved
+        $checkTechnician = TechnicianTicket::where('ticket_id', $ticket->id)->where('status', 0)->doesntExist();
+        if ($checkTechnician) {
             $ticket->update(['status' => 'process', 'start_time' => now()]);
             $technicians = TechnicianTicket::where('ticket_id', $ticket->id)
                 ->where('technician_id', '!=', $technicianId)
@@ -227,25 +238,35 @@ public function storeNonStaff($data)
 
     private function reject($data)
     {
+        $ticket = Ticket::findOrFail($data['id']);
+        $technicianId = Auth::user()->pegawai->id;
+
         if (Auth::user()->role != 'teknisi') {
-            $ticket = Ticket::findOrFail($data['id']);
+            $ticket->update(['status' => $data["ticket_status"]]);
             $staff = MPegawai::findOrFail($ticket->staff_id);
-            $ticket->status = $data["ticket_status"];
-            $ticket->save();
             Notification::send($staff->user, new RejectTicketByBossNotification($ticket));
         } else {
-            $ticket =  Ticket::findOrFail($data->id);
-            $technicianId = Auth::user()->pegawai->id;
             TechnicianTicket::where('ticket_id', $ticket->id)
                 ->where('technician_id', $technicianId)
                 ->update(['status' => 2]);
-            $technicianTicket = TechnicianTicket::where('ticket_id', $ticket->id);
-            if ($technicianTicket->count() === $technicianTicket->where('status', 2)->count()) {
-                $ticket->update([
-                    'status' => 'waiting approval',
-                ]);
-                $technicianBoss = MPegawai::findOrFail($ticket->technician_boss_id);
-                Notification::send($technicianBoss->user, new RejectTicketByTechnicianNotification($ticket));
+
+            $technician = Auth::user();
+            $technicianBoss = MPegawai::findOrFail($ticket->technician_boss_id);
+            Notification::send($technicianBoss->user, new RejectTicketByTechnicianNotification($ticket, $technician));
+
+            $totalTechnicians = TechnicianTicket::where('ticket_id', $ticket->id)->count();
+            $rejectedCount = TechnicianTicket::where('ticket_id', $ticket->id)->where('status', 2)->count();
+            $approvedCount = TechnicianTicket::where('ticket_id', $ticket->id)->where('status', 1)->count();
+
+            if ($rejectedCount === $totalTechnicians) {
+                $ticket->update(['status' => 'waiting approval']);
+            } elseif ($approvedCount > 0) {
+                $ticket->update(['status' => 'process', 'start_time' => now()]);
+                $technicians = TechnicianTicket::where('ticket_id', $ticket->id)
+                    ->where('technician_id', '!=', $technicianId)
+                    ->with('technician.user')
+                    ->get();
+                Notification::send($technicians->pluck('technician.user'), new ProcessTicketNotification($ticket));
             }
         }
     }

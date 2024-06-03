@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\Master;
 
+use Carbon\Carbon;
+use App\Models\MShift;
+use App\Events\ShiftUpdated;
 use Illuminate\Http\Request;
 use App\Traits\ResponseOutput;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Master\ShiftRequest;
 use App\Repositories\App\AppRepository;
-use App\Models\MShift;
+use App\Http\Requests\Master\ShiftRequest;
 
 class CShift extends Controller
 {
     use ResponseOutput;
     protected $appRepository;
-    public function __construct(AppRepository $appRepository) {
+    public function __construct(AppRepository $appRepository)
+    {
         $this->appRepository = $appRepository;
     }
     public function index()
@@ -40,9 +44,13 @@ class CShift extends Controller
             $model = new MShift();
             if ($data['id']) {
                 $this->appRepository->updateOneModel($model, $data);
+                $activeShiftName = setShift(); 
+                ShiftUpdated::dispatch($activeShiftName);
                 return $this->responseSuccess(['message' =>  __('Successfully Updated') . " " . __('Shift')]);
             } else {
                 $this->appRepository->insertOneModel($model, $data);
+                $activeShiftName = setShift(); 
+                ShiftUpdated::dispatch($activeShiftName);
                 return $this->responseSuccess(['message' => __('Added Successfully') . " " . __('Shift')]);
             }
         });
@@ -61,7 +69,7 @@ class CShift extends Controller
      */
     public function edit(MShift $shift)
     {
-        return $this->safeApiCall(function() use($shift){
+        return $this->safeApiCall(function () use ($shift) {
             return $this->responseSuccess($shift);
         });
     }
@@ -77,8 +85,13 @@ class CShift extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(MShift $shift)
     {
-        //
+        DB::beginTransaction();
+        return $this->safeApiCall(function () use ($shift) {
+            $shift->delete();
+            DB::commit();
+            return $this->responseSuccess(['message' => __("Successfully Delete") . __("Location")]);
+        });
     }
 }

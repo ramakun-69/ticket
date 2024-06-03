@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use App\Models\MShift;
+use App\Models\Ticket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -10,41 +11,72 @@ use Illuminate\Support\Facades\Session;
 function generateTicketNumber($type)
 {
     // Tentukan kode berdasarkan tipe tiket
-    $code = ($type == 'machine') ? "TM" : (($type == 'utilities') ? "TU" : (($type == 'sipil') ? "TS" : "IT"));
+    $code = ($type == 'machine') ? "TM" : (($type == 'utilities') ? "TU" : (($type == 'non-mesin') ? "NM" : (($type == 'sipil') ? "TS" : "IT")));
 
-    $currentMonth = date('m');
-    $currentYear = date('Y');
-    $lastTicketNumber = DB::table('tickets')
-        ->whereMonth('created_at', '=', $currentMonth)
-        ->whereYear('created_at', '=', $currentYear)
-        ->max('ticket_number');
 
-    if (!$lastTicketNumber) {
-        $ticketNumber = 'WO-' . $code . '-001';
-    } else {
-        $lastTicketNumber = explode('-', $lastTicketNumber)[2];
-        $lastTicketNumber = (int)$lastTicketNumber;
-        $lastTicketNumber++;
+    // Ambil nomor tiket terakhir dari tabel tickets
+    $lastTicket = Ticket::latest()->first();
+
+    if ($lastTicket) {
+        // Jika ada nomor tiket terakhir, ambil nomor urut terakhir dan tambahkan 1
+        $lastTicketNumber = explode('-', $lastTicket->ticket_number)[2];
+        $lastTicketNumber = (int)$lastTicketNumber + 1;
         $lastTicketNumber = str_pad($lastTicketNumber, 3, '0', STR_PAD_LEFT);
         $ticketNumber = 'WO-' . $code . '-' . $lastTicketNumber;
+    } else {
+        // Jika tabel kosong, gunakan nomor default
+        $ticketNumber = 'WO-' . $code . '-001';
     }
 
     return $ticketNumber;
 }
 
+
+
 function setShift()
 {
-    $currentTime = Carbon::now();
+    $now = Carbon::now();
     $shifts = MShift::all();
+    $activeShiftId = null;
+    $activeShiftName = null;
+
     foreach ($shifts as $shift) {
-        $startTime = Carbon::parse($shift->start_time);
-        $endTime = Carbon::parse($shift->end_time);
-        if ($currentTime->between($startTime, $endTime)) {
-            Session::put('shift', $shift->name);
-            return;
+        $startShift = Carbon::createFromTimeString($shift->start_time);
+        $endShift = Carbon::createFromTimeString($shift->end_time);
+
+        // Handle shifts that pass midnight
+        if ($endShift->lessThan($startShift)) {
+            if (
+                $now->isBetween($startShift, Carbon::tomorrow()->startOfDay()->subSecond()) ||
+                $now->isBetween(Carbon::yesterday()->endOfDay()->addSecond(), $endShift)
+            ) {
+                $activeShiftId = $shift->id;
+                $activeShiftName = $shift->name;
+                break;
+            }
+        } else {
+            if ($now->isBetween($startShift, $endShift->subSecond())) {
+                $activeShiftId = $shift->id;
+                $activeShiftName = $shift->name;
+                break;
+            }
         }
     }
-    Session::put('shift', null);
+
+    foreach ($shifts as $shift) {
+        $shift->is_active = $shift->id === $activeShiftId ? 'Y' : 'N';
+        $shift->save();
+    }
+    if (!$activeShiftId) {
+        MShift::where('is_active', 'Y')->update(['is_active' => 'N']);
+    }
+
+    return $activeShiftName !== null ? $activeShiftName : __('No scheduled shift');
+}
+
+function cekShiftActive()
+{
+    return MShift::where('is_active', 'Y')->first();
 }
 
 function buildBadgeStatus($text)
@@ -88,12 +120,9 @@ function buildTicketActionHtml($row)
     } elseif ($userRole == "teknisi") {
         if ($row->status == "waiting process" &&  $technicianTicket->status == 0) {
             $editAction = '<a href="' . route('ticket.confirm', $row) . '" class="btn btn-primary btn-sm confirm me-2" data-id="' . $row->id . '">' . __("Confirm") . '</a>';
-        } elseif ($row->status == "process") {
+        } elseif ($row->status == "process" && $technicianTicket->status == 1) {
             $editAction = '<a href="' . route('ticket.edit', $row) . '" class="btn btn-success btn-sm  edit me-2">' . __('Finish') . '</a>';
-        }
-    } elseif ($userRole == 'atasan') {
-        if ($row->status == "waiting closed") {
-            $editAction = '<a href="' . route('ticket.close', $row) . '" class="btn btn-danger btn-sm close me-2" data-id="' . $row->id . '">' . __("Close Ticket") . '</a>';
+            $changeShiftAction = '<a href="' . route('ticket.change-shift', $row) . '" class="btn btn-warning btn-sm  change-shift me-2">' . __('Change Shift') . '</a>';
         }
     }
     //Delete
@@ -107,6 +136,7 @@ function buildTicketActionHtml($row)
     }
     $detailAction = '<a href="' . route('ticket.show', $row) . '" style="margin-left:4px" class="badge bg-info"><i class="mdi mdi-eye" style="font-size:15px;"></i></a>';
     $actionHtml .= $editAction ?? '';
+    $actionHtml .= $changeShiftAction ?? '';
     $actionHtml .= $deleteAction ?? '';
     $actionHtml .= $printAction ?? '';
     $actionHtml .= $detailAction ?? '';

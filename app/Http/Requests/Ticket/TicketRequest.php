@@ -48,7 +48,7 @@ class TicketRequest extends FormRequest
             $this->fill['ticket_status'] = 1;
         } elseif (Auth::user()->role == "atasan teknisi" && $this->id) {
             $this->fill['ticket_status'] = 1;
-            if ($this->status != "rejected") {
+            if ($this->ticket_status != "rejected") {
                 $this->fill['technician_id'] = 1;
             }
         } elseif (Auth::user()->role == "teknisi" && $this->id) {

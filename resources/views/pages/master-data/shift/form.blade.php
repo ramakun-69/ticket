@@ -16,6 +16,10 @@
                     <input type="time" class="form-control" id="end_time" name="end_time"  autocomplete="off">
                 </div>
             </div>
+            {{-- <div class="mb-3">
+                <input type="checkbox" class="form-check-input" value="Y" id="is_active" name="is_active">
+                <label for="field-1" class="form-check-label">{{ __('Active Shift')}}</label>
+            </div> --}}
            
         </div>
     </div>

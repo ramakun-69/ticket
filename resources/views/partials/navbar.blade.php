@@ -25,12 +25,10 @@
                 <i class="ri-menu-2-line align-middle"></i>
             </button>
             <!-- start page title -->
-            @if (Session::get('shift') != null)
                 <div class="page-title-box align-self-center d-none d-md-block">
-                    <span class="btn btn-rounded btn-success btn-sm" data-bs-toggle="button" style="margin-left: 20px">
-                        {{ Session::get('shift') }}</span>
+                    <span class="btn btn-rounded btn-success btn-sm" id="shift" data-bs-toggle="button" style="margin-left: 20px">
+                        {{ cekShiftActive() ? Str::upper(cekShiftActive()->name) : __('No scheduled shift') }}</span>
                 </div>
-            @endif
             <!-- end page title -->
         </div>
         <div class="d-flex">

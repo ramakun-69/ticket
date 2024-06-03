@@ -14,6 +14,7 @@
     </div><!-- end col-->
 </div>
 @widget('modal',["title"=>__('Support Ticket'),"form"=>"pages.ticket.form", 'data' =>["productionAssets" => $productionAssets, "itAssets"=>$itAssets, "technician" => $technician], "type" => "modal-xl  modal-dialog-scrollable" ])
+@widget('change-shift',["title"=>__('Change Shift'),"form"=>"pages.ticket.change-shift" ])
 @widget('delete', ["dt" =>true])
 @endsection
 @push('datatable')

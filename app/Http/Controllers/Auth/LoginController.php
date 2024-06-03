@@ -64,8 +64,8 @@ class LoginController extends Controller
             if ($this->attemptLogin($request)) {
                 if ($request->hasSession()) {
                     $request->session()->put('auth.password_confirmed_at', time());
+                    setShift();
                 }
-                setShift();
                 return $this->sendLoginResponse($request);
             }
             $this->incrementLoginAttempts($request);

@@ -36,3 +36,4 @@ type="text/css" />
 <link href="{{ asset('libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet"
 type="text/css" />
 @endif
+{{-- @vite('resources/css/app.css') --}}

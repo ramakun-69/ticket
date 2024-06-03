@@ -9,17 +9,18 @@
     </div>
     <div class="mb-3 d-none" id="teknisi-div">
         <label for="technician_id">{{ __('Technician') }}</label>
-        <select name="technician_id[]" id="technician_id" class="form-control select2" multiple>
+        <select name="technician_id[]" id="technician_id" class="form-control select2 select-form" multiple>
             <option value="" disabled>{{ __('Please Select') }}</option>
             @foreach ($technician as $tech)
                 <option value="{{ $tech->id }}">{{ $tech->name }}</option>
-                @endforeach
-              
+            @endforeach
+
         </select>
     </div>
     @push('js')
         <script>
             $(document).ready(function() {
+               
                 $("select[name=ticket_status]").change(function() {
                     var value = $(this).val();
                     $("#teknisi-div").toggleClass("d-none", value === "rejected");

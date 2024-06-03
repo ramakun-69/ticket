@@ -56,7 +56,7 @@ class Report implements FromCollection, WithHeadings, WithMapping, ShouldAutoSiz
             $ticket->asset->name,
             __($ticket->type),
             toDateIndo($ticket->damage_time),
-            toDateTimeIndo($ticket->start_time),
+            downtime($ticket->start_time, $ticket->finish_time),
             toDateTimeIndo($ticket->finish_time),
             __($ticket->status),
 

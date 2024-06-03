@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\Ticket;
 
 use App\Models\MAsset;
+use App\Models\MShift;
 use App\Models\Ticket;
 use App\Models\MPegawai;
+use App\Models\MDepartment;
 use Illuminate\Http\Request;
 use App\Traits\ResponseOutput;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\TechnicianTicket;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Ticket\TicketRequest;
+use Illuminate\Support\Facades\Notification;
 use App\Repositories\Ticket\TicketRepository;
+use App\Notifications\CreateTicketNotification;
+use App\Http\Requests\Ticket\RollingShiftRequest;
 
 class CTicket extends Controller
 {
@@ -29,10 +35,11 @@ class CTicket extends Controller
         $title = __("Support Ticket");
         $productionAssets = MAsset::where("type", "produksi")->get();
         $itAssets = MAsset::where("type", "it")->get();
+        $shift = MShift::where('is_active', 'Y')->first();
         $technician = MPegawai::whereHas('user', function ($query) {
             $query->where('role', 'teknisi')
                 ->where('department_id', Auth::user()->pegawai?->department_id);
-        })->get();
+            })->where('shift_id', $shift->id)->get();
         return view("pages.ticket.index", compact("title", "productionAssets", "itAssets", "technician"));
     }
     public function myTicket()
@@ -116,6 +123,38 @@ class CTicket extends Controller
     {
         return $this->safeApiCall(function () use ($ticket) {
             return $this->responseSuccess($ticket);
+        });
+    }
+    public function changeShift(Ticket $ticket)
+    {
+        $department = MDepartment::where('name', ($ticket->type == "it" ? "IT" : "Engineering"))
+            ->firstOrFail();
+        $shift = MShift::where('is_active', 'Y')->first();
+        $technician = MPegawai::whereHas('user', function ($query) {
+            $query->where('role', 'teknisi');
+        })->where('shift_id', '!=', $shift->id)->where('department_id', $department->id)
+            ->where('id', '!=', Auth::user()->pegawai->id)->get();
+        return $this->safeApiCall(function () use ($ticket, $technician) {
+            return $this->responseSuccess(['ticket' => $ticket, 'technician' => $technician]);
+        });
+    }
+    public function rollingShift(RollingShiftRequest $request)
+    {
+        return $this->safeApiCall(function () use ($request) {
+            $data = $request->validated();
+            $ticket = Ticket::findOrFail($data['id']);
+            foreach ($data['technician_id'] as $tech) {
+                $technicianTicket[] = [
+                    'ticket_id' => $data['id'],
+                    'technician_id' => $tech,
+                    'created_at' => now(),
+                ];
+            }
+            TechnicianTicket::insert($technicianTicket);
+            $technicians = MPegawai::whereIn('id', $data['technician_id'])->with('user')->get();
+            $users = $technicians->pluck('user');
+            Notification::send($users, new CreateTicketNotification($ticket));
+            return $this->responseSuccess(['message' => __('Shift Change Successful')]);
         });
     }
 

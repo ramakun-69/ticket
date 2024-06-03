@@ -79,7 +79,7 @@
     </div>
 </div>
 
-<div class="row">
+{{-- <div class="row">
     <div class="col-lg-12 col-xl-12 stretch-card">
       <div class="card">
         <div class="card-body">
@@ -92,9 +92,9 @@
         </div> 
       </div>
     </div>
-</div>
+</div> --}}
 @endsection
-@widget('modal',["title"=>__('Support Ticket'),"form"=>"pages.ticket.form", 'data' =>["productionAssets" => $productionAssets, "itAssets"=>$itAssets, "technician" => $technician], "type" => "modal-xl  modal-dialog-scrollable" ])
+{{-- @widget('modal',["title"=>__('Support Ticket'),"form"=>"pages.ticket.form", 'data' =>["productionAssets" => $productionAssets, "itAssets"=>$itAssets, "technician" => $technician], "type" => "modal-xl  modal-dialog-scrollable" ])
 @widget('delete', ["dt" =>true])
 @push('datatable')
 <script>
@@ -112,6 +112,6 @@
       },
   ];
     var _DATATABLE = setDataTable(_URL,_COLUMNS); 
-</script>
-@endpush
-@include('pages.ticket.ticket-js')
+</script> --}}
+{{-- @endpush --}}
+{{-- @include('pages.ticket.ticket-js') --}}

@@ -5,15 +5,12 @@ namespace App\Http\Requests\Ticket;
 use App\Traits\FailedValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReportRequest extends FormRequest
+class RollingShiftRequest extends FormRequest
 {
     use FailedValidation;
     protected $fill = [
-        'start_date' => 1,
-        'end_date' => 1,
-        'category' => 0,
-        'asset_id' => 0,
-        'type' => 1,
+        "technician_id" => 1,
+        "id" => 1,
     ];
     /**
      * Determine if the user is authorized to make this request.

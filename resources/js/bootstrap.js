@@ -32,3 +32,11 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
     enabledTransports: ['ws', 'wss'],
 });
+
+window.Echo.channel('shifts')
+    .listen('ShiftUpdated', (e) => {
+        console.log('ShiftUpdated event received:', e);
+        document.getElementById('shift').innerText = `${e.shift}`;
+    });
+
+

@@ -13,6 +13,10 @@
                     <label class="form-check-label" for="utilities">{{ __("Utilities Engineering") }}</label>
                 </div>
                 <div class="col-2">
+                    <input class="form-check-input" value="non-mesin" type="radio" name="type" id="non-mesin">
+                    <label class="form-check-label" for="non-mesin">{{ __("Non Machine") }}</label>
+                </div>
+                <div class="col-2">
                     <input class="form-check-input" value="sipil" type="radio" name="type" id="sipil">
                     <label class="form-check-label" for="sipil">{{ __("Sipil") }}</label>
                 </div>

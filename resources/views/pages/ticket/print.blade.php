@@ -81,7 +81,7 @@
     </p>
     <div class="border-dua" style="width: 170px;"></div>
     <p style="text-align: center; font-size: 14px; font-family: arial; line-height: -4em; margin-top: 0;">Nomor:
-        {{ $ticket->type == 'produksi' ? 'SF/TK-003.2' : $ticket->ticket_number }}</p>
+        {{ $ticket->type == 'produksi' ? 'SF/TK-003.2' : 'SF/MIS-004' }}</p>
     <div style="text-align: center; margin-top: 5px">
         <table>
             <tr>

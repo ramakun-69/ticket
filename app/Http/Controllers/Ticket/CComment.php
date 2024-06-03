@@ -28,7 +28,7 @@ class CComment extends Controller
             $comment->is_my_comment = $comment->created_by === $user->id;
             return $comment;
         });
-       
+
         return response()->json([
             'comment' => $formattedComments->values()
         ], 200);
@@ -52,14 +52,30 @@ class CComment extends Controller
             Comment::create($validate);
             $ticket = Ticket::findOrFail($validate['ticket_id']);
             $technicianIds = $ticket->technician()->pluck('technician_id')->toArray();
+            $users = collect();
+
             if (Auth::user()->role == 'staff') {
                 $technicians = MPegawai::whereIn('id', $technicianIds)->with('user')->get();
-                $user = $technicians->pluck('user');
+                $users = $technicians->pluck('user');
             } elseif (Auth::user()->role == 'teknisi') {
-                $user = MPegawai::where('id', $ticket->staff_id)->with('user')->first();
-                $user = $user->user;
+                $pegawai = MPegawai::where('id', $ticket->staff_id)->with('user')->first();
+                $users = collect([$pegawai->user]);
+            } elseif (in_array(Auth::user()->role, ['atasan', 'atasan teknisi'])) {
+                $pegawais = MPegawai::where('id', $ticket->staff_id)
+                    ->orWhere(function ($query) use ($ticket) {
+                        $query->where('id', $ticket->technician_boss_id)
+                            ->orWhere('id', $ticket->boss_id);
+                    })
+                    ->orWhereIn('id', $technicianIds)
+                    ->with('user')
+                    ->get();
+                $users = $pegawais->pluck('user');
             }
-            Notification::send($user, new CommentNotification($ticket));
+
+            // Mengirim notifikasi ke setiap pengguna dalam koleksi $users
+            Notification::send($users, new CommentNotification($ticket));
+
+
             return $this->responseSuccess(['success' => true]);
         });
     }

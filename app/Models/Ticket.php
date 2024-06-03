@@ -75,6 +75,8 @@ class Ticket extends Model
                 $query->whereHas('asset', function ($query) use ($data) {
                     $query->where('category', $data['category']);
                 });
-            });
+            })->when(isset($data['asset_id']), function ($query) use ($data) {
+                $query->where('asset_id', $data['asset_id']);
+            })->where('status', "closed");
     }
 }

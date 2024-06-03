@@ -30,6 +30,17 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-3 d-none" id="select-asset">
+                                <div class="mb-3">
+                                    <label for="asset" class="form-label">{{ __('Asset') }}</label>
+                                    <select name="asset_id" id="asset_id" class="form-control">
+                                        <option value="" selected disabled>{{ __('Please Select') }}</option>
+                                        @foreach (config('enum.production_asset') as $item)
+                                            <option value="{{ $item }}">{{ Str::ucfirst(__($item)) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-3">
                                 <div class="mb-3">
                                     <label for="start_date" class="form-label">{{ __('From Date') }}</label>
@@ -61,6 +72,26 @@
             $("#type").change(function() {
                 var value = $(this).val();
                 $("#select-category").toggleClass("d-none", value == "it");
+                $("#select-asset").toggleClass("d-none", value == "it");
+            });
+            $("#select-category").change(function() {
+                var assetSelect = $("#asset_id");
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('ticket-asset') }}",
+                    data: {
+                        type: $("#category").val()
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        assetSelect.empty().append(
+                            "<option value=''>{{ __('Please Select') }}</option>");
+                        $.each(response, function(key, value) {
+                            assetSelect.append('<option value="' + value.id + '">' +
+                                value.name + '</option>');
+                        });
+                    }
+                });
             });
             var _LOADING = `<div class="w-100 d-flex align-items-center">
                 <div class="m-auto d-flex align-items-center">

@@ -1,5 +1,8 @@
 // Select2
-$(".select2").select2({
+$(".select-shift").select2({
+    dropdownParent: $("#modalShift"),
+});
+$(".select-form").select2({
     dropdownParent: $("#modalForm"),
 });
 

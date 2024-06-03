@@ -93,3 +93,4 @@
 </script>
 @stack('datatable')
 @stack('js')
+@vite('resources/js/app.js')

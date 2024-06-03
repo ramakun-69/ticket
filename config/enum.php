@@ -2,7 +2,7 @@
 
 return [
     "production_asset" => [
-        "mesin", "utilities", "sipil","non-mesin"
+        "machine", "utilities", "sipil","non-mesin"
     ],
     "it_asset" => [
         "hardware", "software", "service"

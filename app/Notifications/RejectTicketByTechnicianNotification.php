@@ -14,10 +14,11 @@ class RejectTicketByTechnicianNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    protected $ticket;
-    public function __construct($ticket)
+    protected $ticket, $technician;
+    public function __construct($ticket, $technician)
     {
         $this->ticket = $ticket;
+        $this->technician = $technician;
     }
 
     /**
@@ -53,7 +54,7 @@ class RejectTicketByTechnicianNotification extends Notification
     {
         return [
             'title' => __("Ticket Rejected"),
-            'messages' => __("The Ticket With Number") . $this->ticket->ticket_number .  __("Was Rejected By Technician"),
+            'messages' => __("The Ticket With Number") . $this->ticket->ticket_number .  __("Was Rejected By ") . $this->technician->pegawai->name,
             'type' => $this->ticket->type
         ];
     }

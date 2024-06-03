@@ -22,7 +22,7 @@ function setDataTable(_URL,_COLUMNS, customOptions = null,afterLoad = null){
             processing:`{{ __("Wait a Moment") }}....`,
             emptyTable: "{{ __('Data Not Found or Empty') }}"
         },
-        order : [[1, 'desc']],
+        order : [[1, 'asc']],
         columns: _COLUMNS,
         columnDefs: [
             {

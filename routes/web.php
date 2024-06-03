@@ -30,7 +30,9 @@ use Illuminate\Routing\RouteGroup;
 
 Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::middleware(['auth'])->group(function () {
+
     Route::get('dashboard', [CDashboard::class, 'index'])->name('dashboard');
+    // Route::get('cek-shift', [CShift::class, 'checkShift'])->name('cek-shift');
     Route::prefix('master-data')->name('master-data.')
         ->middleware(['checkRole:admin'])
         ->group(function () {
@@ -46,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
         ->controller(CTicket::class)
         ->group(function () {
             Route::resource('ticket', CTicket::class);
+            Route::get('change-shift/{ticket}', [CTicket::class, 'changeShift'])->name('ticket.change-shift');
+            Route::post('rolling-shift', [CTicket::class, 'rollingShift'])->name('ticket.rolling-shift');
             Route::get('ticket-asset', 'ticketAssets')->name('ticket-asset');
             Route::get('asset-info', 'assetInfo')->name('asset-info');
             Route::put('confirm-ticket/{ticket}', [CTicket::class, 'confirm'])->name('ticket.confirm');
