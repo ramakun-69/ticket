@@ -192,6 +192,9 @@ class CDatatable extends Controller
             ->addColumn('status', function ($row) {
                 return buildBadgeStatus($row->status);
             })
+            ->addColumn('created_at', function ($row) {
+                return toDateIndo($row->created_at);
+            })
             ->addColumn('action', function ($row) {
                 return buildTicketActionHtml($row);
             })
