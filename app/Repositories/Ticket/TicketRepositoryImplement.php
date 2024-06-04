@@ -143,24 +143,26 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
         ]);
         
         if ($ticket->type == 'produksi') {
-            $dataSparePart = [];
+            $partData = [];
             foreach ($data['part_name'] as $index => $partName) {
                 $partData[] = [
-                    // 'ticket_id' => $ticket->id,
                     'name' => $partName,
                     'unit' => $data['unit'][$index],
                     'total' => $data['total'][$index],
                     'information' => $data['information'][$index] ?? null,
-                   
                 ];
             }
-        //    dd($dataSparePart);
-            if (!empty($dataSparePart)) {
-                foreach ($dataSparePart as &$sparePart) {
+        
+            $partData = array_filter($partData, function($item) {
+                return !empty(array_filter($item));
+            });
+        
+            if (!empty($partData)) {
+                foreach ($partData as &$sparePart) {
                     $sparePart['ticket_id'] = $ticket->id;
                     $sparePart['created_at'] = now();
                 }
-                Sparepart::insert($dataSparePart);
+                Sparepart::insert($partData);
             }
         }
         $boss = MPegawai::findOrFail($ticket->boss_id);
