@@ -43,7 +43,7 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
             $type = $data["type"] == 'it' ? "it" : "produksi";
             $ticketNumber = generateTicketNumber($data["type"]);
             $status = "waiting approval";
-
+            dd($boss);
             $ticketData = array_merge($data, [
                 'staff_id' => Auth::user()->pegawai->id,
                 'boss_id' => $boss->id,
