@@ -43,6 +43,6 @@ class CReport extends Controller
     public function export(ReportRequest $request)
     {
         $data = $request->validated();
-        return Excel::download(new Report($data), 'report ' . $data['start_date'] . ' - ' . $data['end_date'] . '.xlsx');
+        return Excel::download(new Report($data), 'Report ' . toDateIndo($data['start_date']) . ' - ' . toDateIndo($data['end_date']) . '.xlsx');
     }
 }
