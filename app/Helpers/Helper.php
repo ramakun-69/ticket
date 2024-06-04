@@ -116,7 +116,7 @@ function buildTicketActionHtml($row)
 
     //Edit
     if ($userRole != "staff" && $userRole != "admin" && $userRole != "teknisi" &&  ($row->status != 'closed' && $row->status != 'rejected' && $row->status != 'waiting closed')) {
-        $editAction = '<a href="' . route('ticket.edit', $row) . '" class="badge bg-warning edit me-2"><i class="mdi mdi-pencil" style="font-size:15px;"></i></a>';
+        $editAction = '<a href="' . route('ticket.edit', $row) . '" class="btn btn-sm btn-warning edit me-2"><i class="mdi mdi-pencil" style="font-size:15px;"></i></a>';
     } elseif ($userRole == "teknisi") {
         if ($row->status == "waiting process" || $row->status == "process" &&  $technicianTicket->status == 0) {
             $editAction = '<a href="' . route('ticket.confirm', $row) . '" class="btn btn-primary btn-sm confirm me-2" data-id="' . $row->id . '">' . __("Confirm") . '</a>';
@@ -132,7 +132,7 @@ function buildTicketActionHtml($row)
 
     //Print
     if ($row->status == "closed") {
-        $printAction = '<a href="' . route('print-ticket', ['id' => $row->id]) . '" class="badge bg-secondary" target="_BLANK"><i class="mdi mdi-printer" style="font-size:15px;"></i></a>';
+        $printAction = '<a href="' . route('print-ticket', ['id' => $row->id]) . '" class="btn btn-sm btn-secondary" target="_BLANK"><i class="mdi mdi-printer" style="font-size:15px;"></i></a>';
     }
     $detailAction = '<a href="' . route('ticket.show', $row) . '" style="margin-left:4px" class="btn btn-info btn-sm"><i class="mdi mdi-eye" style="font-size:15px;"></i></a>';
     $actionHtml .= $editAction ?? '';
