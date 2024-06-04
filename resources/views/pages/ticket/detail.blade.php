@@ -111,7 +111,7 @@
                                     <p class="mb-0">{{ __('Finish Time') }}</p>
                                 </div>
                                 <div class="col-1 text-end">:</div>
-                                <div class="col-6">{{ toDateTimeIndo($ticket->finish_time) }}</div>
+                                <div class="col-6">{{ $ticket->finish_time ? toDateTimeIndo($ticket->finish_time : "") }}</div>
                             </div>
 
                         </div> <!-- end card body-->
