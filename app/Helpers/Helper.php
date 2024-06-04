@@ -134,7 +134,7 @@ function buildTicketActionHtml($row)
     if ($row->status == "closed") {
         $printAction = '<a href="' . route('print-ticket', ['id' => $row->id]) . '" class="badge bg-secondary" target="_BLANK"><i class="mdi mdi-printer" style="font-size:15px;"></i></a>';
     }
-    $detailAction = '<a href="' . route('ticket.show', $row) . '" style="margin-left:4px" class="badge bg-info"><i class="mdi mdi-eye" style="font-size:15px;"></i></a>';
+    $detailAction = '<a href="' . route('ticket.show', $row) . '" style="margin-left:4px" class="btn btn-info"><i class="mdi mdi-eye" style="font-size:15px;"></i></a>';
     $actionHtml .= $editAction ?? '';
     $actionHtml .= $changeShiftAction ?? '';
     $actionHtml .= $deleteAction ?? '';
