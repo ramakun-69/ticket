@@ -27,6 +27,7 @@
       {'title' : '{{ __("Asset Name") }}','data' : 'asset.name'},
       {'title' : '{{ __("Type") }}','data' : 'type'},
       {'title' : '{{ __("Status") }}','data' : 'status'},
+      {'title' : '{{ __("Creataed At") }}','data' : 'created_at'},
       {
           'title' : '{{ __("Action") }}',
           'data' : 'action',
