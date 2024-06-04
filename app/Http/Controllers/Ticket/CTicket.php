@@ -187,6 +187,7 @@ class CTicket extends Controller
         $categories = [
             "it" => "it",
             "machine" => "mesin",
+            "mesin" => "mesin",
             "utilities" => "utilities",
             "sipil" => "sipil",
         ];

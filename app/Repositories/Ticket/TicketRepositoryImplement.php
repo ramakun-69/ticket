@@ -145,7 +145,7 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
         if ($ticket->type == 'produksi') {
             $dataSparePart = [];
             foreach ($data['part_name'] as $index => $partName) {
-                $dataSparePart[] = [
+                $partData[] = [
                     // 'ticket_id' => $ticket->id,
                     'name' => $partName,
                     'unit' => $data['unit'][$index],
@@ -154,7 +154,7 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
                    
                 ];
             }
-           
+        //    dd($dataSparePart);
             if (!empty($dataSparePart)) {
                 foreach ($dataSparePart as &$sparePart) {
                     $sparePart['ticket_id'] = $ticket->id;
