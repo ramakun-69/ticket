@@ -121,8 +121,8 @@ function buildTicketActionHtml($row)
         if ($row->status == "waiting process" &&  $technicianTicket->status == 0) {
             $editAction = '<a href="' . route('ticket.confirm', $row) . '" class="btn btn-primary btn-sm confirm me-2" data-id="' . $row->id . '">' . __("Confirm") . '</a>';
         } elseif ($row->status == "process" && $technicianTicket->status == 1) {
-            $editAction = '<a href="' . route('ticket.edit', $row) . '" class="btn btn-success btn-sm  edit me-2">' . __('Finish') . '</a>';
-            $changeShiftAction = '<a href="' . route('ticket.change-shift', $row) . '" class="btn btn-warning btn-sm  change-shift me-2">' . __('Change Shift') . '</a>';
+            $editAction = '<a href="' . route('ticket.edit', $row) . '" class="btn btn-success btn-sm  edit me-2"><i class="mdi mdi-check" style="font-size:15px;"></i></a>';
+            $changeShiftAction = '<a href="' . route('ticket.change-shift', $row) . '" class="btn btn-warning btn-sm  change-shift me-2"><i class="mdi-account-clock" style="font-size:15px;"></i></a>';
         }
     }
     //Delete
