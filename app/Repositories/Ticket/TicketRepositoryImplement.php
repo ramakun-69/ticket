@@ -151,13 +151,14 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
                     'unit' => $data['unit'][$index],
                     'total' => $data['total'][$index],
                     'information' => $data['information'][$index] ?? null,
-                    'created_at' => now(),
+                   
                 ];
             }
            
             if (!empty($dataSparePart)) {
                 foreach ($dataSparePart as &$sparePart) {
                     $sparePart['ticket_id'] = $ticket->id;
+                    $sparePart['created_at'] = now();
                 }
                 Sparepart::insert($dataSparePart);
             }

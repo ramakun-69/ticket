@@ -43,7 +43,7 @@ function resetModal(){
     $("input").removeClass('is-invalid');
     $("textarea").removeClass('is-invalid');
     $("small.text-danger").remove();
-    $(".select2-hidden-accessible").val(null).trigger('change');
+    $(".select2-hidden-accessible").val().trigger('change');
     $("#info").addClass("d-none");
 }
 function clearInput(formId){
