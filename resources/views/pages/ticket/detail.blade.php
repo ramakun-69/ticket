@@ -148,33 +148,35 @@
                                                 <div class="px-lg-3">
                                                     <div class="pt-3">
                                                         <div class="row">
-                                                            @if (Auth::user()->role == 'atasan' || Auth::user()->role == 'atasan teknisi')
-                                                                @if ($ticket->status != 'waiting approval')
-                                                                    <div class="col">
-                                                                        <div class="position-relative">
-                                                                            <input type="hidden" class="form-control"
-                                                                                value="{{ $ticket->id }}"
-                                                                                name="ticket_id">
-                                                                            <input type="text"
-                                                                                class="form-control chat-input"
-                                                                                id="input-message" name="comment"
-                                                                                placeholder="{{ __('Enter Message') }}"
-                                                                                autocomplete="off">
-                                                                        </div>
+                                                            @if (Auth::user()->role == 'atasan' ||
+                                                                    (Auth::user()->role == 'atasan teknisi' && $ticket->status != 'waiting approval') ||
+                                                                    Auth::user()->role == 'teknisi' ||
+                                                                    Auth::user()->role == 'staff')
+                                                                <div class="col">
+                                                                    <div class="position-relative">
+                                                                        <input type="hidden" class="form-control"
+                                                                            value="{{ $ticket->id }}" name="ticket_id">
+                                                                        <input type="text"
+                                                                            class="form-control chat-input"
+                                                                            id="input-message" name="comment"
+                                                                            placeholder="{{ __('Enter Message') }}"
+                                                                            autocomplete="off">
                                                                     </div>
-                                                                    <div class="col-auto">
-                                                                        <button type="submit"
-                                                                            class="btn btn-danger chat-send w-md waves-effect waves-light"
-                                                                            id="btn-submit" disabled><span
-                                                                                class="d-none d-sm-inline-block me-2 ">
-                                                                                <span class="send-text">Send</span>
-                                                                                <span class="spinner-border text-white "
-                                                                                    style="width: 15px; height: 15px; display: none"></span>
-                                                                            </span>
-                                                                            <i class="mdi mdi-send"></i></button>
-                                                                    </div>
-                                                                @endif
+                                                                </div>
+                                                                <div class="col-auto">
+                                                                    <button type="submit"
+                                                                        class="btn btn-danger chat-send w-md waves-effect waves-light"
+                                                                        id="btn-submit" disabled>
+                                                                        <span class="d-none d-sm-inline-block me-2">
+                                                                            <span class="send-text">Send</span>
+                                                                            <span class="spinner-border text-white"
+                                                                                style="width: 15px; height: 15px; display: none"></span>
+                                                                        </span>
+                                                                        <i class="mdi mdi-send"></i>
+                                                                    </button>
+                                                                </div>
                                                             @endif
+
                                                         </div>
                                                     </div>
                                                 </div>
