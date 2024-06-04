@@ -118,7 +118,7 @@ function buildTicketActionHtml($row)
     if ($userRole != "staff" && $userRole != "admin" && $userRole != "teknisi" &&  ($row->status != 'closed' && $row->status != 'rejected' && $row->status != 'waiting closed')) {
         $editAction = '<a href="' . route('ticket.edit', $row) . '" class="badge bg-warning edit me-2"><i class="mdi mdi-pencil" style="font-size:15px;"></i></a>';
     } elseif ($userRole == "teknisi") {
-        if ($row->status == "waiting process" &&  $technicianTicket->status == 0) {
+        if ($row->status == "waiting process" || $row->status == "process" &&  $technicianTicket->status == 0) {
             $editAction = '<a href="' . route('ticket.confirm', $row) . '" class="btn btn-primary btn-sm confirm me-2" data-id="' . $row->id . '">' . __("Confirm") . '</a>';
         } elseif ($row->status == "process" && $technicianTicket->status == 1) {
             $editAction = '<a href="' . route('ticket.edit', $row) . '" class="btn btn-success btn-sm  edit me-2"><i class="mdi mdi-check" style="font-size:15px;"></i></a>';
