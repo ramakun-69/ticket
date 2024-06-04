@@ -186,6 +186,7 @@ class CTicket extends Controller
         $type = ($request->type == "it") ? "it" : "produksi";
         $categories = [
             "it" => "it",
+            'non-mesin' => 'non-mesin',
             "machine" => "mesin",
             "mesin" => "mesin",
             "utilities" => "utilities",
