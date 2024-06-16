@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Charts\DowntimeChart;
 use App\Models\MAsset;
 use App\Models\Ticket;
 use App\Models\MPegawai;
@@ -10,22 +11,23 @@ use Illuminate\Support\Facades\Auth;
 
 class CDashboard extends Controller
 {
-    public function index()
+    public function index(DowntimeChart $chart, Request $request)
     {
         $title = __('Dashboard');
         $user = Auth::user()->pegawai;
         $role = Auth::user()->role;
         $tickets = Ticket::filterByRole($user, $role)->get();
-        $onProcess = $tickets->where('status', 'process')->count();
-        $closed = $tickets->where('status', 'closed')->count();
-        $open = $tickets->where('status', 'waiting approval')->count();
-        $total = $tickets->count();
-        $productionAssets = MAsset::where("type", "produksi")->get();
-        $itAssets = MAsset::where("type", "it")->get();
-        $technician = MPegawai::whereHas('user', function ($query) {
-            $query->where('role', 'teknisi');
-        })->where('department_id', Auth::user()->pegawai?->department_id)->get();
-        return view("pages.index", compact("title","onProcess","closed","open","total","productionAssets","itAssets","technician"));
+        $chart = $chart->build($request);
+        $monthlyTicket = Ticket::getMonthlyTicket($request->start_date, $request->end_date, Auth::user(), $request->asset_id)
+            ->get()
+            ->groupBy('asset_id')
+            ->map(function ($tickets) {
+                return [
+                    'asset_name' => $tickets->first()->asset->name,
+                    'service_count' => $tickets->count(),
+                ];
+            });;
+        return view("pages.index", compact("title", "tickets", "chart", "monthlyTicket"));
     }
     public function notif(Request $request)
     {
@@ -35,12 +37,12 @@ class CDashboard extends Controller
                 $notification->markAsRead();
             }
         }
-        if ($notification->data['type']== 'comment') {
+        if ($notification->data['type'] == 'comment') {
             return redirect($notification->data['url']);
-        }else {
+        } else {
             return redirect()->route('ticket.index');
         }
-    }   
+    }
     public function read(Request $request)
     {
         Auth::user()->unreadNotifications->markAsRead();

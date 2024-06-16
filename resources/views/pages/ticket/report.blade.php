@@ -35,9 +35,6 @@
                                     <label for="asset" class="form-label">{{ __('Asset') }}</label>
                                     <select name="asset_id" id="asset_id" class="form-control">
                                         <option value="" selected disabled>{{ __('Please Select') }}</option>
-                                        @foreach (config('enum.production_asset') as $item)
-                                            <option value="{{ $item }}">{{ Str::ucfirst(__($item)) }}</option>
-                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -80,7 +77,8 @@
                     type: "GET",
                     url: "{{ route('ticket-asset') }}",
                     data: {
-                        type: $("#category").val()
+                        type: $("#type").val(),
+                        category: $("#category").val()
                     },
                     dataType: "JSON",
                     success: function(response) {

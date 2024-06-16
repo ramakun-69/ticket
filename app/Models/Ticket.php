@@ -11,7 +11,7 @@ class Ticket extends Model
 {
     use HasFactory;
     protected $guarded = ["id"];
-    protected $with = ['asset', 'staff', 'department', 'boss','technicianBoss', 'sparepart', 'user'];
+    protected $with = ['asset', 'staff', 'department', 'boss', 'technicianBoss', 'sparepart', 'user'];
 
     protected static function boot()
     {
@@ -56,15 +56,68 @@ class Ticket extends Model
     {
         return $this->hasMany(Sparepart::class, 'ticket_id');
     }
+
     public function scopeFilterByRole($query, $user, $role)
     {
+        $roleRelations = [
+            'staff' => ['staff', 'staff_id'],
+            'atasan' => ['boss', 'bosss_id'],
+            'teknisi' => ['technician', 'technician_id'],
+            'atasan teknisi' => ['technicianBoss', 'technician_boss_id'],
+        ];
+
         if ($role == 'admin') {
             return $query;
         }
-        return $query->whereHas('technician',function ($query) use ($user, $role) {
-            return $role == 'staff' ? $query->where('staff_id', $user->id) : ($role == 'atasan' ? $query->where('boss_id', $user->id) : ($role == 'teknisi' ? $query->where('technician_id', $user->id) : ($role == 'atasn teknisi' ? $query->where('technician_boss_id', $user->id) :
-                null)));
-        });
+
+        if (isset($roleRelations[$role])) {
+            $relation = $roleRelations[$role];
+            return $query->whereHas($relation[0], function ($query) use ($user, $relation) {
+                $query->where($relation[1], $user->id);
+            });
+        }
+
+        // Handle other roles if necessary
+        return $query;
+    }
+
+    public function scopeGetMonthlyDowntime($query, $startDate = null, $endDate = null, $user, $assetId)
+    {
+        return $query->FilterByRole($user, $user->role)
+            ->when(isset($startDate) && isset($endDate), function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->when($assetId, function ($query) use ($assetId) {
+                $query->where('asset_id', $assetId);
+            })
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('status', 'closed')
+            ->get()
+            ->groupBy(function ($ticket) {
+                return Carbon::parse($ticket->created_at)->format('m');
+            })
+            ->map(function ($tickets) {
+                return $tickets->sum(function ($ticket) {
+                    // Pastikan bahwa start_time dan finish_time dalam format waktu yang benar
+                    $start = Carbon::parse($ticket->start_time);
+                    $finish = Carbon::parse($ticket->finish_time);
+                    // Hitung selisih waktu dalam menit
+                    return $finish->diffInMinutes($start);
+                });
+            });
+    }
+    public function scopeGetMonthlyTicket($query, $startDate = null, $endDate = null, $user, $assetId)
+    {
+        return $query->FilterByRole($user, $user->role)
+            ->when(isset($startDate) && isset($endDate), function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [$startDate, $endDate]);
+            })
+            ->when($assetId, function ($query) use ($assetId) {
+                $query->where('asset_id', $assetId);
+            })
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('status', 'closed');
     }
     public function scopeFilteredReport($query, $user, $role, $data)
     {

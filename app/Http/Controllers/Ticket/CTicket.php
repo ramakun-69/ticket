@@ -39,7 +39,7 @@ class CTicket extends Controller
         $technician = MPegawai::whereHas('user', function ($query) {
             $query->where('role', 'teknisi')
                 ->where('department_id', Auth::user()->pegawai?->department_id);
-            })->where('shift_id', $shift->id)->get();
+        })->where('shift_id', $shift->id)->get();
         return view("pages.ticket.index", compact("title", "productionAssets", "itAssets", "technician"));
     }
     public function myTicket()
@@ -191,10 +191,15 @@ class CTicket extends Controller
             "mesin" => "mesin",
             "utilities" => "utilities",
             "sipil" => "sipil",
+            "hardware" => "hardware",
+            "software" => "software",
+            "service" => "service"
         ];
-        $category = $categories[$request->type] ?? null;
+        $category = $categories[$request->category] ?? null;
         $assets = MAsset::where("type", $type)
             ->when($type === "produksi", function ($query) use ($category) {
+                return $query->where("category", $category);
+            })->when($type === "it" && isset($category), function ($query) use ($category) {
                 return $query->where("category", $category);
             })
             ->get();

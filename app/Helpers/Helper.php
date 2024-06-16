@@ -31,8 +31,6 @@ function generateTicketNumber($type)
     return $ticketNumber;
 }
 
-
-
 function setShift()
 {
     $now = Carbon::now();

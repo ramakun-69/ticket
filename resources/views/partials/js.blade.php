@@ -17,6 +17,7 @@
 <!-- Select 2 -->
 <script src="{{ asset('libs/select2/js/select2.min.js') }}"></script>
 <script src="{{ asset('js/pages/select2.init.js') }}"></script>
+<script src="{{ asset('libs/apexcharts/apexcharts.min.js')}}"></script>
 @if (isset($dt))
     <script src="{{ asset('libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
