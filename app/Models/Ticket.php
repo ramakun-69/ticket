@@ -61,7 +61,7 @@ class Ticket extends Model
     {
         $roleRelations = [
             'staff' => ['staff', 'staff_id'],
-            'atasan' => ['boss', 'bosss_id'],
+            'atasan' => ['boss', 'boss_id'],
             'teknisi' => ['technician', 'technician_id'],
             'atasan teknisi' => ['technicianBoss', 'technician_boss_id'],
         ];
