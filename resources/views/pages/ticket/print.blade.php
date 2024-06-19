@@ -129,14 +129,14 @@
                                 <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Location') }}
                                 <td style="padding-left: -40%;">:</td>
                                 <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                    {{ $ticket->asset->location->name }}</td>
+                                    {{ $ticket->asset?->location?->name }}</td>
                             </tr>
                         @else
                             <tr>
                                 <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('PIC') }}
                                 <td style="padding-left: -40%;">:</td>
                                 <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                    {{ __($ticket->asset->pic->name) }}</td>
+                                    {{ __($ticket->asset?->pic?->name) }}</td>
                             </tr>
                         @endif
                         @if ($ticket->asset->type != 'service')
