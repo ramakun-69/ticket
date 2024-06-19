@@ -8,7 +8,7 @@
                         .attr("value", response.data.asset_id)
                         .text(response.data.asset.name)
                         .prop("selected", true);
-        var locationValue = response.data.type == "produksi" ? response.data.asset.location.name : response.data.asset.user.pegawai.name;
+        var locationValue = response.data.type == "produksi" ? response.data.asset?.location?.name : response.data.asset?.user?.pegawai?.name;
       $("#input-type").addClass("d-none");
       modal.find("input[name=id]").val(response.data.id);
       modal.find("input[name=type]").val(response.data.type).prop("checked", true);
