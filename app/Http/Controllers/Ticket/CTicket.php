@@ -38,9 +38,11 @@ class CTicket extends Controller
         $itAssets = MAsset::where("type", "it")->get();
         $shift = MShift::where('is_active', 'Y')->first();
         $technician = MPegawai::whereHas('user', function ($query) {
-            $query->where('role', 'teknisi')
-                ->orWhere('role', 'atasan teknisi')
-                ->where('department_id', Auth::user()->pegawai?->department_id);
+                $query->where(function($query) {
+                    $query->where('role', 'teknisi')
+                          ->orWhere('role', 'atasan teknisi');
+                })
+                ->where('department_id',  Auth::user()->pegawai?->department_id);
         });
         $technician = $technician->when(!$isITDepartment, function ($query) use ($shift) {
             $query->where('shift_id', $shift->id);
