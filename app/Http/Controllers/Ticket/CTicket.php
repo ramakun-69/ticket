@@ -33,13 +33,18 @@ class CTicket extends Controller
     public function index()
     {
         $title = __("Support Ticket");
+        $isITDepartment = Auth::user()->pegawai?->department->name === 'IT';
         $productionAssets = MAsset::where("type", "produksi")->get();
         $itAssets = MAsset::where("type", "it")->get();
         $shift = MShift::where('is_active', 'Y')->first();
         $technician = MPegawai::whereHas('user', function ($query) {
             $query->where('role', 'teknisi')
+                ->orWhere('role', 'atasan teknisi')
                 ->where('department_id', Auth::user()->pegawai?->department_id);
-        })->where('shift_id', $shift->id)->get();
+        });
+        $technician = $technician->when(!$isITDepartment, function ($query) use ($shift) {
+            $query->where('shift_id', $shift->id);
+        })->get();
         return view("pages.ticket.index", compact("title", "productionAssets", "itAssets", "technician"));
     }
     public function myTicket()
