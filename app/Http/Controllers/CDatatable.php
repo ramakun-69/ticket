@@ -155,8 +155,8 @@ class CDatatable extends Controller
                 $data = Ticket::where('technician_boss_id', $user->id)
                     ->where(function ($query) {
                         $query->where('status', 'waiting approval');
-                        $query->orWhere('status', 'waiting process');
-                        $query->orWhere('status', 'process');
+                            ->orWhere('status', 'waiting process')
+                            ->orWhere('status', 'process')
                     })
                     ->orWhere('status', 'closed')
                     ->get();
