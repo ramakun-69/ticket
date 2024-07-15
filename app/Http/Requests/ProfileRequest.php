@@ -6,7 +6,7 @@ use App\Traits\FailedValidation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProfileRequest extends FormRequest
+    class ProfileRequest extends FormRequest
 {
     use FailedValidation;
     protected $fill = [

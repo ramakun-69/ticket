@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="{{ Auth::user()->role != 'admin' ? 'col-6' : 'col-12' }}">
+                <div class="{{ Auth::user()->role != 'admin' ? 'col-6' : 'col-12' }} dynamic-column">
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title mb-3">{{ $title }}</h4>
@@ -111,14 +111,15 @@
                                     <p class="mb-0">{{ __('Finish Time') }}</p>
                                 </div>
                                 <div class="col-1 text-end">:</div>
-                                <div class="col-6">{{ $ticket->finish_time ? toDateTimeIndo($ticket->finish_time) : "" }}</div>
+                                <div class="col-6">{{ $ticket->finish_time ? toDateTimeIndo($ticket->finish_time) : '' }}
+                                </div>
                             </div>
 
                         </div> <!-- end card body-->
                     </div> <!-- end card -->
                 </div>
                 @if (Auth::user()->role != 'admin')
-                    <div class="col-6">
+                    <div class="col-6 dynamic-column">
                         <div class="d-lg-flex mb-4">
 
 
@@ -193,3 +194,33 @@
     </div>
     @widget('comment')
 @endsection
+@push('js')
+    <script>
+        function adjustColumns() {
+            var elements = document.querySelectorAll('.dynamic-column');
+            console.log(elements);
+            elements.forEach(function(element) {
+                if (window.innerWidth < 768) {
+                    element.classList.remove('col-6');
+                    element.classList.add('col-12');
+                } else {
+                    element.classList.remove('col-12');
+                    element.classList.add('col-6');
+                }
+            });
+        }
+
+        // Adjust columns on initial load
+        adjustColumns();
+
+        // Adjust columns on window resize
+        window.addEventListener('resize', adjustColumns);
+
+
+        // Adjust columns on initial load
+        adjustColumns();
+
+        // Adjust columns on window resize
+        window.addEventListener('resize', adjustColumns);
+    </script>
+@endpush

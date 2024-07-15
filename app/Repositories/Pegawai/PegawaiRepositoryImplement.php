@@ -3,7 +3,6 @@
 namespace App\Repositories\Pegawai;
 
 use App\Models\User;
-use App\Models\Pegawai;
 use App\Models\MPegawai;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;

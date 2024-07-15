@@ -187,7 +187,7 @@ class CDatatable extends Controller
     public function myTicket()
     {
         $user = Auth::user()->pegawai;
-        $data = Ticket::where("created_by", $user->id)->get();
+        $data = Ticket::where("created_by", $user->id)->whereNotIn("status", ['closed', 'rejected'])->get();
         return DataTables::of($data)
             ->addColumn('status', function ($row) {
                 return buildBadgeStatus($row->status);
@@ -210,11 +210,11 @@ class CDatatable extends Controller
         $user = Auth::user()->pegawai;
         switch (Auth::user()->role) {
             case 'staff':
-                $data = Ticket::where('staff_id', $user->id)->where('status', 'closed')->get();
+                $data = Ticket::where('staff_id', $user->id)->whereIn('status', ['closed','rejected'])->get();
                 break;
             case 'atasan':
                 $data = Ticket::where('boss_id', $user->id)
-                    ->where('status', 'closed')
+                    ->whereIn('status', ['closed','rejected'])
                     ->get();
                 break;
             case 'teknisi':
@@ -222,15 +222,15 @@ class CDatatable extends Controller
                     $query->where('technician_id', $user->id);
                 })
                     ->where(function ($query) {
-                        $query->where('status', 'closed');
+                        $query->whereIn('status', ['closed','rejected']);
                     })->get();
                 break;
             case 'atasan teknisi':
-                $data = Ticket::where('technician_boss_id', $user->id)->where('status', 'closed')
+                $data = Ticket::where('technician_boss_id', $user->id)->whereIn('status', ['closed','rejected'])
                     ->get();
                 break;
             case 'admin':
-                $data = Ticket::where('status', 'closed')->get();
+                $data = Ticket::whereIn('status', ['closed','rejected'])->get();
                 break;
             default:
                 $data = [];

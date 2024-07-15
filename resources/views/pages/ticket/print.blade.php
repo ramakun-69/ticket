@@ -106,7 +106,7 @@
                                 {{ __('Ticket Category') }}
                             <td style="padding-left: -40%;">:</td>
                             <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                {{ $ticket->type == 'it' ? 'IT' : 'Produksi' }}</td>
+                                {{ Str::ucfirst($ticket->asset->category) }}</td>
                         </tr>
                         @if ($ticket->asset->type != 'service')
                             <tr>
@@ -206,7 +206,7 @@
                 </tr>
             </tbody>
         </table>
-        @if ($ticket->type = 'produksi')
+        @if ($ticket->type = 'produksi' && $ticket->sparepart->count() > 0)
             <p
                 style="text-align: center; font-family: arial; font-size: 15px; text-transform: uppercase;margin-bottom: 0px">
                 <b>{{ __('Use of spare parts') }}</b>
@@ -263,36 +263,56 @@
     <div style="margin-top: 20px">
         <table>
             <tr>
-                <td style="font-size: 14px; font-family: arial;text-align: center"width="500">{{ __('Report By') }}</td>
+                <td style="font-size: 14px; font-family: arial;text-align: center"width="500">{{ __('Report By') }}
+                </td>
             </tr>
             <tr>
-                <td style="font-size: 14px; font-family: arial;text-align: center"><br><br><br><br><b>{{ $ticket->staff?->name }}</b>
+                <td style="font-size: 14px; font-family: arial;text-align: center">
+                    <br><br><br><br><b>{{ $ticket->staff?->name }}</b>
                 </td>
             </tr>
         </table>
     </div>
-    <div style="margin-top: 40px">
+    <div style="margin-top: 10px">
         <table>
             <tr>
-                <td width="500" style="font-size: 14px; font-family: arial;text-align: center">{{ __('Done By') }} <br></td>
-            </tr>
-            <tr><td style="font-size: 14px; font-family: arial;text-align: center"">{{ __('Technician') }}</td></tr>
-        </table>
-        <table>
-            <tr>
-                @foreach ($ticket->technician->where('status', 1) as $index => $tech)
-                <td style="font-size: 14px; font-family: arial;" @if($index % 2 == 0) width="400" 
-                @elseif($index % 2 == 1)
-                width="150" 
-                @endif>
-                    <br><br><br><br><b>{{ $tech->technician->name }}</b>
+                <td width="500" style="font-size: 14px; font-family: arial; text-align: center;">
+                    {{ __('Done By') }}
+                    <br>
                 </td>
-                @if($index % 2 == 1)
-                    </tr><br><tr>
-                @endif
-            @endforeach
+            </tr>
+            <tr>
+                <td style="font-size: 14px; font-family: arial; text-align: center;">{{ __('Technician') }}</td>
             </tr>
         </table>
+
+        @php
+            $technicians = $ticket->technician->where('status', 1);
+            $technicianCount = $technicians->count();
+        @endphp
+
+        <table border="0" style="margin-top: 100px;">
+            <tr>
+                @if ($technicianCount == 1)
+                    <td style="font-size: 14px; font-family: Arial; width: 660px; text-align: center;">
+                        <b>{{ $technicians->first()->technician->name }}</b>
+                    </td>
+                @else
+                    @foreach ($technicians as $index => $tech)
+                        <td
+                            style="font-size: 14px; font-family: Arial; width: 280px; {{ $index % 2 == 0 ? 'text-align: right;' : '' }}">
+                            <b>{{ $tech->technician->name }}</b>
+                        </td>
+                    @endforeach
+                    @if ($technicianCount % 2 == 1)
+                        <td style="font-size: 14px; font-family: Arial; width: 280px;"></td>
+                    @endif
+                @endif
+            </tr>
+        </table>
+
+
+
     </div>
 </body>
 

@@ -199,7 +199,8 @@ class CTicket extends Controller
             "software" => "software",
             "service" => "service"
         ];
-        $category = $categories[$request->type] ?? null;
+        $category = $categories[$request->category] ?? null;
+       
         $assets = MAsset::where("type", $type)
             ->when($type == "produksi", function ($query) use ($category) {
                 return $query->where("category", $category);
