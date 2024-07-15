@@ -33,7 +33,7 @@
                             <div class="col-md-3 d-none" id="select-asset">
                                 <div class="mb-3">
                                     <label for="asset" class="form-label">{{ __('Asset') }}</label>
-                                    <select name="asset_id" id="asset_id" class="form-control">
+                                    <select name="asset_id" id="asset_id" class="form-control select2">
                                         <option value="" selected disabled>{{ __('Please Select') }}</option>
                                     </select>
                                 </div>
@@ -66,6 +66,7 @@
 @push('datatable')
     <script>
         $(document).ready(function() {
+            $(".select2").select2();
             $("#type").change(function() {
                 var value = $(this).val();
                 $("#select-category").toggleClass("d-none", value == "it");
@@ -84,10 +85,12 @@
                     success: function(response) {
                         assetSelect.empty().append(
                             "<option value=''>{{ __('Please Select') }}</option>");
+                            
                         $.each(response, function(key, value) {
                             assetSelect.append('<option value="' + value.id + '">' +
                                 value.name + '</option>');
                         });
+                       
                     }
                 });
             });

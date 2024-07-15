@@ -32,7 +32,7 @@
     </div>
     <div class="mb-3">
         <label for="assets">{{ __("Asset") }}</label>
-        <select name="asset_id" id="asset_id" class="form-control select2">
+        <select name="asset_id" id="asset_id" class="form-control select2 select-form">
             <option value="">{{ __("Please Select") }}</option>
         </select>
     </div>
@@ -48,7 +48,7 @@
     </div>
     <div class="mb-3">
         <label for="condition">{{ __("Condition") }}</label>
-        <select name="condition" id="condition" class="form-control disabled-input" >
+        <select name="condition" id="condition" class="form-control  disabled-input" >
             <option value="">{{ __("Please Select") }}</option>
             @foreach (config("enum.condition") as $item)
             <option value="{{ $item }}">{{ __($item) }}</option>

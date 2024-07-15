@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use Carbon\Carbon;
 use App\Models\Ticket;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -38,6 +39,9 @@ class Report implements FromCollection, WithHeadings, WithMapping, ShouldAutoSiz
             __('Ticket Number'),
             __('Staff Name'),
             __('Asset Name') . "/" . __("Service"),
+            __('Asset Code'),
+            __('Location') . "/" . __("PIC"),
+            __('Category'),
             __('Type'),
             __('Damaged Time'),
             __('Downtime'),
@@ -48,7 +52,7 @@ class Report implements FromCollection, WithHeadings, WithMapping, ShouldAutoSiz
 
     public function map($ticket): array
     {
-
+      
         return [
             $this->no++,
             $ticket->ticket_number,
@@ -56,7 +60,7 @@ class Report implements FromCollection, WithHeadings, WithMapping, ShouldAutoSiz
             $ticket->asset->name,
             $ticket->asset->code,
             $ticket->asset?->location?->name,
-            __($ticket->asset?->cetegory?->name),
+            Str::ucfirst(__($ticket->asset?->category)),
             __($ticket->type),
             toDateTimeIndo($ticket->damage_time),
             downtime($ticket->start_time, $ticket->finish_time),

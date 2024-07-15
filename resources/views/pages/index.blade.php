@@ -110,7 +110,7 @@
                             </div>
                             <div class="col-md-2" id="select-asset">
                                 <label for="asset" class="form-label">{{ __('Asset') }}</label>
-                                <select name="asset_id" id="asset_id" class="form-control">
+                                <select name="asset_id" id="asset_id" class="form-control select2 select-form">
                                     <option value="" selected disabled>{{ __('Select') }}</option>
                                 </select>
                             </div>
