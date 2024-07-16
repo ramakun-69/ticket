@@ -200,12 +200,13 @@ class CTicket extends Controller
             "service" => "service"
         ];
         $category = $categories[$request->type] ?? $categories[$request->category] ?? null;
+        // dd($category);
        
         $assets = MAsset::where("type", $type)
             ->when($type == "produksi", function ($query) use ($category) {
                 return $query->where("category", $category);
-            })->when($type == "it" && isset($category), function ($query) use ($category) {
-                return $query->where("category", $category);
+            })->when($type == "it", function ($query) use ($category) {
+                return $query->where("type", $category);
             })
             ->get();
         return response()->json($assets);
