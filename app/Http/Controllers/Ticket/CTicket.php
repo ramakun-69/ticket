@@ -206,7 +206,8 @@ class CTicket extends Controller
             ->when($type == "produksi", function ($query) use ($category) {
                 return $query->where("category", $category);
             })->when($type == "it", function ($query) use ($category) {
-                return $query->where("type", $category);
+                return $query->where("type", $category)
+                        ->orWhere("category", $category);
             })
             ->get();
         return response()->json($assets);

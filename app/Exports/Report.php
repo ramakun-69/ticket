@@ -59,7 +59,7 @@ class Report implements FromCollection, WithHeadings, WithMapping, ShouldAutoSiz
             $ticket->user->name,
             $ticket->asset->name,
             $ticket->asset->code,
-            $ticket->asset?->location?->name,
+            $ticket->asset->location->name ? $ticket->asset->location->name : $ticket->asset->user->name ,
             Str::ucfirst(__($ticket->asset?->category)),
             __($ticket->type),
             toDateTimeIndo($ticket->damage_time),

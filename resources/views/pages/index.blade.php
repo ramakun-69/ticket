@@ -80,7 +80,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8 col-xl-8 stretch-card">
+        <div class="col-lg-8 col-xl-12 stretch-card">
             <div class="card">
                 <div class="card-body">
                     <form method="GET" class="mb-3 mt-3">
@@ -108,13 +108,13 @@
                                     <option value="" selected disabled>{{ __('Select') }}</option>
                                 </select>
                             </div>
-                            <div class="col-md-2" id="select-asset">
+                            <div class="col-md-3" id="select-asset">
                                 <label for="asset" class="form-label">{{ __('Asset') }}</label>
                                 <select name="asset_id" id="asset_id" class="form-control select2 select-form">
                                     <option value="" selected disabled>{{ __('Select') }}</option>
                                 </select>
                             </div>
-                            <div class="col-md-2" style="margin-top: 33px">
+                            <div class="col-md-1" style="margin-top: 33px">
                                 <button type="submit" class="btn btn-sm btn-danger">{{ __('Submit') }}</button>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 col-xl-4 stretch-card">
+        <div class="col-lg-6 col-xl-6 stretch-card">
             <div class="card">
                 <div class="card-body">
                     <div class="card-title">
@@ -153,6 +153,7 @@
 @push('js')
     {{ $chart->script() }}
     <script>
+         $(".select2").select2();
         $("#type").change(function() {
             var value = $(this).val();
             var categories;

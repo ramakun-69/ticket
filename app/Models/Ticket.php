@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -57,7 +58,7 @@ class Ticket extends Model
         return $this->hasMany(Sparepart::class, 'ticket_id');
     }
 
-    public function scopeFilterByRole($query, $user, $role)
+    public function scopeFilterByRole(Builder $query, $user, $role)
     {
         $roleRelations = [
             'staff' => ['staff', 'staff_id'],
