@@ -156,7 +156,6 @@ class CDatatable extends Controller
                     ->where(function ($query) {
                         $query->where('status', 'waiting approval');
                     })
-                    ->orWhere('status', 'closed')
                     ->get();
                 break;
             case 'admin':

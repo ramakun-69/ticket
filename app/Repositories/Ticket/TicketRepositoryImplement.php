@@ -131,7 +131,9 @@ class TicketRepositoryImplement extends Eloquent implements TicketRepository
             'finish_time' => now(),
         ]);
         $staff = MPegawai::findOrFail($ticket->staff_id);
+        $leader = MPegawai::findOrFail($ticket->boss_id);
         Notification::send($staff->user, new ClosedTicketNotification($ticket));
+        Notification::send($leader->user, new ClosedTicketNotification($ticket));
     }
     public function tehcnicianProcess($data)
     {

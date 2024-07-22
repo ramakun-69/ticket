@@ -83,8 +83,8 @@ class Ticket extends Model
     }
 
     public function scopeGetMonthlyDowntime($query, $startDate = null, $endDate = null, $user, $assetId)
-    {
-        return $query->FilterByRole($user, $user->role)
+    {  
+        return $query->FilterByRole($user->pegawai, $user->role)
             ->when(isset($startDate) && isset($endDate), function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             })
@@ -108,8 +108,8 @@ class Ticket extends Model
             });
     }
     public function scopeGetMonthlyTicket($query, $startDate = null, $endDate = null, $user, $assetId)
-    {
-        return $query->FilterByRole($user, $user->role)
+    {   
+        return $query->FilterByRole($user->pegawai, $user->role)
             ->when(isset($startDate) && isset($endDate), function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('created_at', [$startDate, $endDate]);
             })

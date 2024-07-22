@@ -123,17 +123,21 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-xl-6 stretch-card">
+        <div class="col-lg-6 col-xl-12 stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title">
-                        <span>{{ __('Asset') }}</span>
+
+                    <div class="d-flex justify-content-between">
+                        <span class="card-title">{{ __('Asset') }}</span>
+                        <a href="#" target="_blank" class="btn btn-secondary btn-sm"><i
+                                class="mdi mdi-printer"></i></a>
                     </div>
                     <table class="table table-responsive table-striped">
                         <thead>
                             <th>#</th>
                             <th>{{ __('Asset Name') }}</th>
                             <th>{{ __('Service') }}</th>
+                            <th>{{ __('Downtime') }}</th>
                         </thead>
                         <tbody>
                             @foreach ($monthlyTicket as $t)
@@ -141,6 +145,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $t['asset_name'] }}</td>
                                     <td>{{ $t['service_count'] }} </td>
+                                    <td>{{ $t['downtime'] }}</td>
                                 </tr>
                             @endforeach
 
@@ -153,7 +158,7 @@
 @push('js')
     {{ $chart->script() }}
     <script>
-         $(".select2").select2();
+        $(".select2").select2();
         $("#type").change(function() {
             var value = $(this).val();
             var categories;

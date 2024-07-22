@@ -19,14 +19,12 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 d-none" id="select-category">
+                            <div class="col-md-3" id="select-category">
                                 <div class="mb-3">
                                     <label for="category" class="form-label">{{ __('Category') }}</label>
                                     <select name="category" id="category" class="form-control">
                                         <option value="" selected disabled>{{ __('Please Select') }}</option>
-                                        @foreach (config('enum.production_asset') as $item)
-                                            <option value="{{ $item }}">{{ Str::ucfirst(__($item)) }}</option>
-                                        @endforeach
+                                       
                                     </select>
                                 </div>
                             </div>
@@ -69,8 +67,10 @@
             $(".select2").select2();
             $("#type").change(function() {
                 var value = $(this).val();
-                $("#select-category").toggleClass("d-none", value == "it");
                 $("#select-asset").toggleClass("d-none", value == "it");
+                if (value == 'it') {
+
+                }
             });
             $("#select-category").change(function() {
                 var assetSelect = $("#asset_id");
@@ -85,12 +85,12 @@
                     success: function(response) {
                         assetSelect.empty().append(
                             "<option value=''>{{ __('Please Select') }}</option>");
-                            
+
                         $.each(response, function(key, value) {
                             assetSelect.append('<option value="' + value.id + '">' +
                                 value.name + '</option>');
                         });
-                       
+
                     }
                 });
             });
