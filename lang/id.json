@@ -370,6 +370,9 @@
     "Location" : "Lokasi",
     "Notifications" : "Pemberitahuan",
     "Wait a Moment" : "Tunggu Sebentar",
-    "Data Not Found or Empty" : "Data Tidak Ditemukan Atau Kosong"
+    "Data Not Found or Empty" : "Data Tidak Ditemukan Atau Kosong",
+    "Approved by" : "Menyetujui",
+    "Known By Technician's Leader" : "Mengetahui Kepala Teknik",
+    "Known By Departement Leader" : "Mengetahui Kepala Departemen"
     
 }

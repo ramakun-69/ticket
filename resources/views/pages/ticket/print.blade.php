@@ -46,6 +46,16 @@
                 background-color: #f2f2f2;
                 color: black;
             }
+
+            .table-container {
+                width: 100%;
+            }
+
+            .table-container td {
+                width: 50%;
+                font-size: 14px;
+                font-family: Arial, sans-serif;
+            }
         </style>
 
     </head>
@@ -54,7 +64,8 @@
         <table>
             <tr>
                 <th><img style="width:150px;" src="{{ asset('images/logo.jpg') }}"></img></th>
-                <th style="font-family: arial; font-size: 25px; padding-left: 30px; color:"><span style="color: red">PT SAMCO
+                <th style="font-family: arial; font-size: 25px; padding-left: 30px; color:"><span style="color: red">PT
+                        SAMCO
                         FARMA</span><br>
                     <small style="font-size: 14px; font-weight: normal; margin-bottom: 0;">
                         (PHARMACEUTICAL & CHEMICAL INDUSTRIES)
@@ -76,109 +87,114 @@
         <div class="border">
         </div>
         <p></p>
-        <p style="text-align: center; font-family: arial; font-size: 15px; text-transform: uppercase;margin-bottom: 0px">
+        <p
+            style="text-align: center; font-family: arial; font-size: 15px; text-transform: uppercase;margin-bottom: 0px">
             <b>PERMINTAAN PEKERJAAN</b>
         </p>
         <div class="border-dua" style="width: 170px;"></div>
         <p style="text-align: center; font-size: 14px; font-family: arial; line-height: -4em; margin-top: 0;">Nomor:
             {{ $ticket->type == 'produksi' ? 'SF/TK-003.2' : 'SF/MIS-004' }}</p>
         <div style="text-align: center; margin-top: 5px">
-                <table>
-                    <tr>
-                        <td width="250" style="vertical-align: top;">
-                            <table style="margin-left: 0px; margin-right: auto;">
-                                <tr>
-                                    <td width="80"
-                                        style="font-size: 14px; font-family: arial; padding-left: 1%; padding-top: 15px;">
-                                        {{ __('Staff Name') }}
-                                    <td style="padding-left: -40%; padding-top: 15px;">:</td>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: -40%; padding-top: 15px;">
-                                        {{ $ticket->staff->name }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;"> {{ __('Position') }}
-                                    <td style="padding-left: -40%;">:</td>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ $ticket->staff->position }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
-                                        {{ __('Ticket Category') }}
-                                    <td style="padding-left: -40%;">:</td>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ Str::ucfirst($ticket->asset->category) }}</td>
-                                </tr>
-                                @if ($ticket->asset->type != 'service')
-                                    <tr>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
-                                            {{ __('Asset Number') }}
-                                        <td style="padding-left: -40%;">:</td>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                            {{ $ticket->asset->code }}</td>
-                                    </tr>
-                                @endif
+            <table>
+                <tr>
+                    <td width="250" style="vertical-align: top;">
+                        <table style="margin-left: 0px; margin-right: auto;">
+                            <tr>
+                                <td width="80"
+                                    style="font-size: 14px; font-family: arial; padding-left: 1%; padding-top: 15px;">
+                                    {{ __('Staff Name') }}
+                                <td style="padding-left: -40%; padding-top: 15px;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%; padding-top: 15px;">
+                                    {{ $ticket->staff->name }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;"> {{ __('Position') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ $ticket->staff->position }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                    {{ __('Ticket Category') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ Str::ucfirst($ticket->asset->category) }}</td>
+                            </tr>
+                            @if ($ticket->asset->type != 'service')
                                 <tr>
                                     <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
-                                        {{ $ticket->asset->type == 'service' ? __('Service Name') : __('Asset Name') }}
+                                        {{ __('Asset Number') }}
                                     <td style="padding-left: -40%;">:</td>
                                     <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ $ticket->asset->name }}</td>
+                                        {{ $ticket->asset->code }}</td>
                                 </tr>
-                                @if ($ticket->type == 'produksi')
-                                    <tr>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Location') }}
-                                        <td style="padding-left: -40%;">:</td>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                            {{ $ticket->asset?->location?->name }}</td>
-                                    </tr>
-                                @else
-                                    <tr>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('PIC') }}
-                                        <td style="padding-left: -40%;">:</td>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                            {{ __($ticket->asset?->pic?->name) }}</td>
-                                    </tr>
-                                @endif
-                                @if ($ticket->asset->type != 'service')
-                                    <tr>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
-                                            {{ __('Condition') }}
-                                        <td style="padding-left: -40%;">:</td>
-                                        <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                            {{ __($ticket->condition) }}</td>
-                                    </tr>
-                                @endif
-                            </table>
-                        </td>
-                        <td style="vertical-align: top;" width="215">
-                            <table style="margin-left: 0px; margin-right: auto;">
+                            @endif
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                    {{ $ticket->asset->type == 'service' ? __('Service Name') : __('Asset Name') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ $ticket->asset->name }}</td>
+                            </tr>
+                            @if ($ticket->type == 'produksi')
                                 <tr>
-                                    <td width="80"
-                                        style="font-size: 14px; font-family: arial; padding-left: 1%; padding-top: 15px;">
-                                        {{ __('Damaged Time') }}
-                                    <td style="padding-left: -40%; padding-top: 15px">:</td>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: -40%; padding-top: 15px;">
-                                        {{ toDateTimeIndo($ticket->damage_time) }}</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Process Time') }}
+                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                        {{ __('Location') }}
                                     <td style="padding-left: -40%;">:</td>
                                     <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ toDateTimeIndo($ticket->start_time) }}</td>
+                                        {{ $ticket->asset?->location?->name }}</td>
                                 </tr>
+                            @else
                                 <tr>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Finish Time') }}
+                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                        {{ __('PIC') }}
                                     <td style="padding-left: -40%;">:</td>
                                     <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ toDateTimeIndo($ticket->finish_time) }}</td>
+                                        {{ __($ticket->asset?->pic?->name) }}</td>
                                 </tr>
+                            @endif
+                            @if ($ticket->asset->type != 'service')
                                 <tr>
-                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Downtime') }}
+                                    <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                        {{ __('Condition') }}
                                     <td style="padding-left: -40%;">:</td>
                                     <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
-                                        {{ downtime($ticket->start_time, $ticket->finish_time) }}</td>
+                                        {{ __($ticket->condition) }}</td>
                                 </tr>
-                                {{-- <tr>
+                            @endif
+                        </table>
+                    </td>
+                    <td style="vertical-align: top;" width="215">
+                        <table style="margin-left: 0px; margin-right: auto;">
+                            <tr>
+                                <td width="80"
+                                    style="font-size: 14px; font-family: arial; padding-left: 1%; padding-top: 15px;">
+                                    {{ __('Damaged Time') }}
+                                <td style="padding-left: -40%; padding-top: 15px">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%; padding-top: 15px;">
+                                    {{ toDateTimeIndo($ticket->damage_time) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                    {{ __('Process Time') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ toDateTimeIndo($ticket->start_time) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;">
+                                    {{ __('Finish Time') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ toDateTimeIndo($ticket->finish_time) }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __('Downtime') }}
+                                <td style="padding-left: -40%;">:</td>
+                                <td style="font-size: 14px; font-family: arial; padding-left: -40%;">
+                                    {{ downtime($ticket->start_time, $ticket->finish_time) }}</td>
+                            </tr>
+                            {{-- <tr>
                                 <td style="font-size: 14px; font-family: arial; padding-left: 1%;">{{ __("Problem Analysis") }}
                                 <td style="padding-left: -40%;">:</td>
                                 <td style="font-size: 14px; font-family: arial; padding-left: -40%;">{{ $ticket->problem_analysis }}</td>
@@ -188,10 +204,10 @@
                                 <td style="padding-left: -40%;">:</td>
                                 <td style="font-size: 14px; font-family: arial; padding-left: -40%;">{{ $ticket->action }}</td>
                             </tr>      --}}
-                            </table>
-                        </td>
-                    </tr>
-                </table>
+                        </table>
+                    </td>
+                </tr>
+            </table>
             <table class="table table-bordered" style="margin-top: 20px; font-size: 14px">
                 <thead>
                     <tr>
@@ -238,82 +254,37 @@
         </div>
 
         <br><br>
-        <div>
-            <table>
-                <tr>
-                    <td width="400"></td>
-                    <td style="font-size: 14px; font-family: arial;">Jakarta, {{ toDateIndo($ticket->updated_at) }}</td>
+        <div class="table-container table table-bordered">
+            <table border="1" width="100%">
+
+                <tr width="50%">
+                    <td style="font-size: 14px; font-family: arial;"><strong>{{ __('Report By') }}</strong></td>
+                    <td style="font-size: 14px; font-family: arial;"><strong>{{ __('Technician') }}</strong></td>
                 </tr>
                 <tr>
-                    <td style="font-size: 14px; font-family: arial;">{{ __('Known By') }}</td>
-                </tr>
-                <tr>
-                    <td style="font-size: 14px; font-family: arial;">{{ __('Staff Leader') }}</td>
-                    <td style="font-size: 14px; font-family: arial;">{{ __('Technician Boss') }} </td>
-                </tr>
-                <tr>
-                    <td style="font-size: 14px; font-family: arial;"><br><br><br><br> <b>{{ $ticket->boss?->name }}</b>
-                    </td>
+                    <td style="font-size: 14px; font-family: arial;">{{ $ticket->staff?->name }}</td>
                     <td style="font-size: 14px; font-family: arial;">
-                        <br><br><br><br><b>{{ $ticket->technicianBoss?->name }}</b>
+                        @php
+                            $technicianNames = $ticket->technician->where('status', 1)->pluck('name')->toArray();
+                            $lastTechnician = array_pop($technicianNames);
+                        @endphp
+                        {{ implode(', ', $technicianNames) }}{{ $lastTechnician ? ', ' . $lastTechnician : '' }}
                     </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 14px; font-family: arial;"><strong>{{ __('Approved by') }}</strong></td>
+                    <td style="font-size: 14px; font-family: arial;">
+                       <strong> {{ $ticket->type == 'it' ? __('Known By Departement Leader') : __("Known By Technician's Leader") }}</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="font-size: 14px; font-family: arial;">{{ $ticket->boss?->name }}</td>
+                    <td style="font-size: 14px; font-family: arial;">
+                        {{ $ticket->type == 'it' ? 'Geralda Agustina' : 'Supriyo' }}</td>
                 </tr>
             </table>
         </div>
-        <div style="margin-top: 20px">
-            <table>
-                <tr>
-                    <td style="font-size: 14px; font-family: arial;text-align: center"width="500">{{ __('Report By') }}
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-size: 14px; font-family: arial;text-align: center">
-                        <br><br><br><br><b>{{ $ticket->staff?->name }}</b>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div style="margin-top: 10px">
-            <table>
-                <tr>
-                    <td width="500" style="font-size: 14px; font-family: arial; text-align: center;">
-                        {{ __('Done By') }}
-                        <br>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="font-size: 14px; font-family: arial; text-align: center;">{{ __('Technician') }}</td>
-                </tr>
-            </table>
 
-            @php
-                $technicians = $ticket->technician->where('status', 1);
-                $technicianCount = $technicians->count();
-            @endphp
-
-            <table border="0" style="margin-top: 100px;">
-                <tr>
-                    @if ($technicianCount == 1)
-                        <td style="font-size: 14px; font-family: Arial; width: 660px; text-align: center;">
-                            <b>{{ $technicians->first()->technician->name }}</b>
-                        </td>
-                    @else
-                        @foreach ($technicians as $index => $tech)
-                            <td
-                                style="font-size: 14px; font-family: Arial; width: 280px; {{ $index % 2 == 0 ? 'text-align: right;' : '' }}">
-                                <b>{{ $tech->technician->name }}</b>
-                            </td>
-                        @endforeach
-                        @if ($technicianCount % 2 == 1)
-                            <td style="font-size: 14px; font-family: Arial; width: 280px;"></td>
-                        @endif
-                    @endif
-                </tr>
-            </table>
-
-
-
-        </div>
     </body>
 
     </html>

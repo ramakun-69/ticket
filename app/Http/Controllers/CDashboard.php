@@ -8,6 +8,7 @@ use App\Models\Ticket;
 use App\Models\MPegawai;
 use Illuminate\Http\Request;
 use App\Charts\DowntimeChart;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 
 class CDashboard extends Controller
@@ -36,6 +37,31 @@ class CDashboard extends Controller
             });
        
         return view("pages.index", compact("title", "tickets", "chart", "monthlyTicket"));
+    }
+    public function print(Request $request)
+    {
+        $title = __('Dashboard');
+        $user = Auth::user()->pegawai;
+        $role = Auth::user()->role;
+        $tickets = Ticket::filterByRole($user, $role)->get();
+        $monthlyTicket = Ticket::getMonthlyTicket($request->start_date, $request->end_date, Auth::user(), $request->asset_id)
+            ->get()
+            ->groupBy('asset_id')
+            ->map(function ($tickets) {
+                $downtime = $tickets->sum(function ($ticket) {
+                    $start = Carbon::parse($ticket->start_time);
+                    $finish = Carbon::parse($ticket->finish_time);
+                    return $finish->diffInMinutes($start);
+                });
+                return [
+                    'asset_name' => $tickets->first()->asset->name,
+                    'service_count' => $tickets->count() . " Kali",
+                    'downtime' => "$downtime Menit"
+                ];
+            });
+       
+            $pdf = Pdf::loadView('pages.print', ['monthlyTicket' => $monthlyTicket]);
+            return $pdf->stream();
     }
     public function notif(Request $request)
     {

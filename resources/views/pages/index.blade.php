@@ -129,7 +129,16 @@
 
                     <div class="d-flex justify-content-between">
                         <span class="card-title">{{ __('Asset') }}</span>
-                        <a href="#" target="_blank" class="btn btn-secondary btn-sm"><i
+                        @php
+                            $request = [
+                               " start_date"=> request('start_date'),
+                               "end_date"=> request('end_date'),
+                               "type"=> request('type'),
+                               "category"=> request('category'),
+                               "asset_id"=> request('assetd_id')
+                            ]
+                        @endphp
+                        <a href="{{ route('dashboard.print',$request ) }}" target="_blank" class="btn btn-secondary btn-sm"><i
                                 class="mdi mdi-printer"></i></a>
                     </div>
                     <table class="table table-responsive table-striped">

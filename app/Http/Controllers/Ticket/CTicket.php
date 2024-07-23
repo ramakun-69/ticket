@@ -189,7 +189,6 @@ class CTicket extends Controller
     {
         $type = ($request->type == "it") ? "it" : "produksi";
         $categories = [
-            "it" => "it",
             'non-mesin' => 'non-mesin',
             "machine" => "mesin",
             "mesin" => "mesin",
@@ -197,7 +196,8 @@ class CTicket extends Controller
             "sipil" => "sipil",
             "hardware" => "hardware",
             "software" => "software",
-            "service" => "service"
+            "service" => "service",
+          
         ];
         $category = $categories[$request->type] ?? $categories[$request->category] ?? null;
         // dd($category);
@@ -205,8 +205,8 @@ class CTicket extends Controller
         $assets = MAsset::where("type", $type)
             ->when($type == "produksi", function ($query) use ($category) {
                 return $query->where("category", $category);
-            })->when($type == "it", function ($query) use ($category) {
-                return $query->where("type", $category)
+            })->when($type == "it", function ($query) use ($category,$request) {
+                return $query->where("type", $request->type)
                         ->orWhere("category", $category);
             })
             ->get();

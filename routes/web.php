@@ -33,6 +33,7 @@ Route::get('/', [LoginController::class, 'showLoginForm']);
 Route::middleware(['auth'])->group(function () {
 
     Route::get('dashboard', [CDashboard::class, 'index'])->name('dashboard');
+    Route::get('print-monthlyTicket', [CDashboard::class, 'print'])->name('dashboard.print');
     // Route::get('cek-shift', [CShift::class, 'checkShift'])->name('cek-shift');
     Route::prefix('master-data')->name('master-data.')
         ->middleware(['checkRole:admin'])

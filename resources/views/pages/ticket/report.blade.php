@@ -24,11 +24,11 @@
                                     <label for="category" class="form-label">{{ __('Category') }}</label>
                                     <select name="category" id="category" class="form-control">
                                         <option value="" selected disabled>{{ __('Please Select') }}</option>
-                                       
+
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 d-none" id="select-asset">
+                            <div class="col-md-3 " id="select-asset">
                                 <div class="mb-3">
                                     <label for="asset" class="form-label">{{ __('Asset') }}</label>
                                     <select name="asset_id" id="asset_id" class="form-control select2">
@@ -67,11 +67,22 @@
             $(".select2").select2();
             $("#type").change(function() {
                 var value = $(this).val();
-                $("#select-asset").toggleClass("d-none", value == "it");
-                if (value == 'it') {
-
-                }
+                var categorySelect = $("#category");
+                const categories = {
+                    it: ["hardware", "software", "service"],
+                    produksi: ["mesin", "utilities", "sipil", "non-mesin"]
+                };
+                categorySelect.html(
+                    '<option value="" selected disabled>{{ __('Please Select') }}</option>');
+                (categories[value] || []).forEach(category =>
+                    categorySelect.append(`<option value="${category}">${ucfirst(category)}</option>`)
+                );
             });
+
+            function ucfirst(str) {
+                if (!str) return str;
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
             $("#select-category").change(function() {
                 var assetSelect = $("#asset_id");
                 $.ajax({
