@@ -86,7 +86,15 @@
     </table>
     <div class="border">
     </div>
-    
+    <div style="float: right; margin-top: 20px">
+        <b>
+            @if (request('start_date') && request('end_date'))
+                {{ toDateIndo(request('start_date')) . ' - ' . toDateIndo(request('end_date')) }}
+            @else
+                {{ toMonthIndo(date('m')) }}
+            @endif
+        </b>
+    </div>
     <table class="table table-bordered" style="margin-top: 50px">
         <thead>
             <th>#</th>
@@ -95,15 +103,36 @@
             <th>{{ __('Downtime') }}</th>
         </thead>
         <tbody>
+            @php
+                $totalService = 0;
+                $totalDowntime = 0;
+            @endphp
             @foreach ($monthlyTicket as $t)
+                @php
+                    $totalService += $t['service_count'];
+                    $totalDowntime += $t['downtime'];
+                @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $t['asset_name'] }}</td>
-                    <td>{{ $t['service_count'] }} </td>
-                    <td>{{ $t['downtime'] }}</td>
+                    <td>{{ $t['service_count'] . ' Kali' }} </td>
+                    <td>{{ $t['downtime'] . 'Menit' }} </td>
                 </tr>
             @endforeach
-
+            <tr>
+                <td style="font-size: 14px; text-align: center" colspan="2"><b>{{ __('Total') }}</b></td>
+                <td><b>{{ $totalService . ' Kali' }}</b></td>
+                <td><b>{{ $totalDowntime . 'Menit' }}</b></td>
+            </tr>
+    </table>
+    <table width="100%" style="margin-top: 13px">
+        <tr>
+            <td width="90%"></td>
+            <td style="font-size: 14px; font-family: arial;"><strong>{{ __('Approved by') }}</strong>
+                <br><br><br><br>
+                Supriyo
+            </td>
+        </tr>
     </table>
 </body>
 

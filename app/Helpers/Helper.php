@@ -155,6 +155,19 @@ function toDateIndo($date)
 
     return $day . ' ' . $month . ' ' . $year;
 }
+function toMonthIndo($month)
+{
+
+   
+    $monthNames = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+    $month = $monthNames[$month - 1];
+    $year = date('Y');
+
+    return  $month . ' ' . $year;
+}
 function toDateTimeIndo($date)
 {
 

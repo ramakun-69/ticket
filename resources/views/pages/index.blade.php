@@ -135,7 +135,7 @@
                                "end_date"=> request('end_date'),
                                "type"=> request('type'),
                                "category"=> request('category'),
-                               "asset_id"=> request('assetd_id')
+                               "asset_id"=> request('asset_id')
                             ]
                         @endphp
                         <a href="{{ route('dashboard.print',$request ) }}" target="_blank" class="btn btn-secondary btn-sm"><i

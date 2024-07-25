@@ -55,8 +55,8 @@ class CDashboard extends Controller
                 });
                 return [
                     'asset_name' => $tickets->first()->asset->name,
-                    'service_count' => $tickets->count() . " Kali",
-                    'downtime' => "$downtime Menit"
+                    'service_count' => $tickets->count() ,
+                    'downtime' => $downtime
                 ];
             });
        
